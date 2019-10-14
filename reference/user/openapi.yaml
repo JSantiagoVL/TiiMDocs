@@ -1,0 +1,278 @@
+openapi: 3.0.0
+info:
+  title: User API
+  version: '1.0'
+  contact:
+    name: Santiago
+    email: jsantiagovl@hotmail.com
+  description: TiiM User API for Android and iOS apps
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /user:
+    post:
+      summary: Register new user
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firebaseUserId:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                    - user
+                    - driver
+                    - admin
+              required:
+                - firebaseUserId
+                - type
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      security:
+        - JWT: []
+      description: Register in the local a new firebase user. If repeated return ok
+  '/user/{userID}':
+    get:
+      summary: Get user data
+      responses:
+        '200':
+          description: OK
+      description: Get the user local data plus Firebase pulic profile data
+      tags:
+        - User
+      security:
+        - JWT: []
+    parameters:
+      - schema:
+          type: string
+        name: userID
+        in: path
+        required: true
+  /routes:
+    get:
+      summary: Get all routes
+      tags:
+        - Route
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/routes.v1.yaml
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  route:
+                    $ref: ../common/models/routes.v1.yaml
+                  stops:
+                    type:
+                      - string
+                      - array
+                    items:
+                      $ref: ../common/models/stop.v1.yaml
+          description: ''
+      description: Get all routes
+      requestBody: {}
+      security:
+        - JWT: []
+  '/routes/{routeID}':
+    parameters:
+      - type: string
+        name: routeID
+        in: path
+        required: true
+    get:
+      summary: Get specific route
+      tags:
+        - Route
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  route:
+                    $ref: ../common/models/routes.v1.yaml
+                  stops:
+                    type: array
+                    items:
+                      $ref: ../common/models/stop.v1.yaml
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+      requestBody: {}
+      security:
+        - JWT: []
+  /stops:
+    get:
+      summary: Get all stops
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/stop.v1.yaml
+      security:
+        - JWT: []
+      tags:
+        - Stop
+  '/stops/{stopID}':
+    parameters:
+      - type: string
+        name: stopID
+        in: path
+        required: true
+    get:
+      summary: Get specific stop
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/stop.v1.yaml
+      description: ''
+      security:
+        - JWT: []
+      requestBody: {}
+      tags:
+        - Stop
+  /journey/calculate:
+    get:
+      summary: Get journey data given two stops
+      tags:
+        - Journey
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  initialStop:
+                    $ref: ../common/models/stop.v1.yaml
+                  endingStop:
+                    $ref: ../common/models/stop.v1.yaml
+                  time:
+                    type: string
+                  price:
+                    type: string
+                  routeStops:
+                    type: array
+                    items:
+                      $ref: ../common/models/stop.v1.yaml
+      security:
+        - JWT: []
+      requestBody: {}
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: intialStop
+          required: true
+        - schema:
+            type: integer
+          in: query
+          name: endingStop
+          required: true
+  '/journey/destinations/{originStopID}':
+    get:
+      summary: Get all posible stops given an origin
+      tags:
+        - Journey
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/stop.v1.yaml
+      security:
+        - JWT: []
+    parameters:
+      - schema:
+          type: string
+        name: originStopID
+        in: path
+        required: true
+  /journey/origins:
+    get:
+      summary: Get neraby ascending stops
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/stop.v1.yaml
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: lat
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: long
+          required: true
+        - schema:
+            type: number
+          in: query
+          name: radious
+      tags:
+        - Journey
+    parameters: []
+  /journey/destinations:
+    parameters:
+      - required: true
+components:
+  schemas: {}
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: Bearer

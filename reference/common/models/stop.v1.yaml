@@ -1,0 +1,54 @@
+title: Stop
+type: object
+x-examples:
+  Example1:
+    value:
+      id: 33
+      routeId: 1
+      name: Plaza duraznos
+      lat: 19.402372
+      long: -99.242884
+      description: NA
+      prevStopId: 32
+      nextStopId: 33
+      type: DESCEND
+      imageUrl: 'https://picsum.photos/seed/picsum/200/300'
+      shortAddress: 'Juan Salvador Agraz 101 Contadero, CDMX'
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+  lat:
+    type: string
+  long:
+    type: string
+  description:
+    type: string
+  nextStopId:
+    type:
+      - integer
+      - 'null'
+  type:
+    type: string
+    enum:
+      - ABOARD
+      - DESCEND
+      - BOTH
+  imageUrl:
+    type: string
+  routeId:
+    type: integer
+  shortAddress:
+    type: string
+required:
+  - id
+  - name
+  - lat
+  - long
+  - description
+  - nextStopId
+  - type
+  - imageUrl
+  - routeId
+  - shortAddress

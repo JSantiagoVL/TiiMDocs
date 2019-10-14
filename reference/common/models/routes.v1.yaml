@@ -1,0 +1,34 @@
+title: Routes
+type: object
+x-examples:
+  example-1: {}
+properties:
+  id:
+    type: number
+  name:
+    type: string
+  initialStop:
+    $ref: ./stop.v1.yaml
+  endingStop:
+    $ref: ./stop.v1.yaml
+  mapResource:
+    type: string
+  status:
+    type: string
+    enum:
+      - ACTIVATED
+      - DEACTIVATED
+  price:
+    type: string
+  stops:
+    type: array
+    items:
+      $ref: ./stop.v1.yaml
+required:
+  - id
+  - name
+  - initialStop
+  - endingStop
+  - mapResource
+  - status
+  - price

@@ -1,0 +1,10 @@
+title: Error
+type: object
+properties:
+  id:
+    type: string
+  error_name:
+    type: string
+  error_description:
+    type: string
+
