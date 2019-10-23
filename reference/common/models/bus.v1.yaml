@@ -1,0 +1,26 @@
+title: Vehicle
+type: object
+properties:
+  id:
+    type: integer
+  ' license':
+    type: string
+  serial:
+    type: string
+  color:
+    type: string
+  image:
+    type: string
+  status:
+    type: string
+  year:
+    type: string
+  modelId:
+    type: integer
+required:
+  - id
+  - ' license'
+  - serial
+  - color
+  - status
+  - modelId

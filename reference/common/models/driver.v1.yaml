@@ -1,0 +1,20 @@
+title: Driver
+type: object
+properties:
+  id:
+    type: string
+  firstName:
+    type: string
+  lastName:
+    type: string
+  imageUrl:
+    type: string
+  status:
+    type: string
+  defaultVehicleId:
+    type: integer
+required:
+  - id
+  - firstName
+  - lastName
+  - status

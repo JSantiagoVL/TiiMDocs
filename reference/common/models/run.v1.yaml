@@ -1,0 +1,21 @@
+title: Run
+type: object
+properties:
+  id:
+    type: string
+  routeId:
+    type: integer
+  vehicleId:
+    type: integer
+  driverId:
+    type: integer
+  departureDate:
+    type: string
+  status:
+    type: string
+required:
+  - id
+  - routeId
+  - vehicleId
+  - driverId
+  - departureDate

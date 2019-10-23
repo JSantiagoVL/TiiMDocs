@@ -41,6 +41,8 @@ properties:
     type: integer
   shortAddress:
     type: string
+  activeStatus:
+    type: string
 required:
   - id
   - name

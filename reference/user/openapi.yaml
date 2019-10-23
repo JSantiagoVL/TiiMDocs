@@ -68,12 +68,6 @@ paths:
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: ../common/models/routes.v1.yaml
         '400':
           description: Bad Request
           content:
@@ -86,23 +80,7 @@ paths:
             application/json:
               schema:
                 $ref: ../common/models/error.v1.yaml
-        '':
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  route:
-                    $ref: ../common/models/routes.v1.yaml
-                  stops:
-                    type:
-                      - string
-                      - array
-                    items:
-                      $ref: ../common/models/stop.v1.yaml
-          description: ''
       description: Get all routes
-      requestBody: {}
       security:
         - JWT: []
   '/routes/{routeID}':
@@ -129,6 +107,9 @@ paths:
                     type: array
                     items:
                       $ref: ../common/models/stop.v1.yaml
+                required:
+                  - route
+                  - stops
         '204':
           description: No Content
           content:
@@ -267,9 +248,34 @@ paths:
       tags:
         - Journey
     parameters: []
-  /journey/destinations:
-    parameters:
-      - required: true
+  /test:
+    get:
+      summary: lol
+      tags: []
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cosa1:
+                    type: array
+                    enum:
+                      - uno
+                      - dos
+                      - tres
+                    items:
+                      $ref: ../common/models/error.v1.yaml
+                  cosa2:
+                    type: string
+                required:
+                  - cosa1
+        '204':
+          description: No Content
 components:
   schemas: {}
   securitySchemes:

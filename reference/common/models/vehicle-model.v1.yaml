@@ -1,0 +1,15 @@
+title: Vehicle Model
+type: object
+properties:
+  id:
+    type: string
+  model:
+    type: string
+  seats:
+    type: integer
+  seatsMapImageUrl:
+    type: string
+  seatRows:
+    type: integer
+  modelImageUrl:
+    type: string
