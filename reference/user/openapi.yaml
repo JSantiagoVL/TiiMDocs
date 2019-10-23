@@ -68,18 +68,12 @@ paths:
       responses:
         '200':
           description: OK
-        '400':
-          description: Bad Request
           content:
             application/json:
               schema:
-                $ref: ../common/models/error.v1.yaml
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: ../common/models/error.v1.yaml
+                type: array
+                items:
+                  $ref: ../common/models/routes.v1.yaml
       description: Get all routes
       security:
         - JWT: []
@@ -110,13 +104,6 @@ paths:
                 required:
                   - route
                   - stops
-        '204':
-          description: No Content
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
       requestBody: {}
       security:
         - JWT: []
@@ -142,6 +129,8 @@ paths:
         name: stopID
         in: path
         required: true
+        schema:
+          type: integer
     get:
       summary: Get specific stop
       responses:
@@ -170,18 +159,20 @@ paths:
               schema:
                 type: object
                 properties:
-                  initialStop:
-                    $ref: ../common/models/stop.v1.yaml
-                  endingStop:
-                    $ref: ../common/models/stop.v1.yaml
                   time:
                     type: string
                   price:
                     type: string
-                  routeStops:
+                  stops:
                     type: array
                     items:
                       $ref: ../common/models/stop.v1.yaml
+                  seatsAvailable:
+                    type: number
+                  amenities:
+                    type: array
+                    items:
+                      $ref: ../common/models/amenity.v1.yaml
       security:
         - JWT: []
       requestBody: {}
@@ -189,13 +180,14 @@ paths:
         - schema:
             type: integer
           in: query
-          name: intialStop
+          name: runId
           required: true
         - schema:
             type: integer
           in: query
           name: endingStop
           required: true
+      description: Calculate a Journey given a Run and a starting Stop.
   '/journey/destinations/{originStopID}':
     get:
       summary: Get all posible stops given an origin
@@ -248,34 +240,184 @@ paths:
       tags:
         - Journey
     parameters: []
-  /test:
+  '/runs/bystop/{stopID}':
     get:
-      summary: lol
-      tags: []
-      security:
-        - JWT: []
+      summary: Get all runs
+      tags:
+        - Run
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  cosa1:
-                    type: array
-                    enum:
-                      - uno
-                      - dos
-                      - tres
-                    items:
-                      $ref: ../common/models/error.v1.yaml
-                  cosa2:
-                    type: string
-                required:
-                  - cosa1
-        '204':
-          description: No Content
+                type: array
+                items:
+                  $ref: ../common/models/run.v1.yaml
+      security:
+        - JWT: []
+      parameters:
+        - schema:
+            type: integer
+            default: '30'
+          in: query
+          name: days
+          description: 30 days by default
+        - schema:
+            type: string
+          in: query
+          name: date
+          description: 'If date is set, days query is discarded'
+      description: Return an array of Runs given a starting stop.
+    parameters:
+      - schema:
+          type: integer
+        name: stopID
+        in: path
+        required: true
+  '/runs/{ID}':
+    get:
+      summary: Get an specific run
+      tags:
+        - Run
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/run.v1.yaml
+      security:
+        - JWT: []
+    parameters:
+      - schema:
+          type: integer
+        name: ID
+        in: path
+        required: true
+  '/runs/{runID}/validateseats':
+    parameters:
+      - type: string
+        name: runID
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Validate seats availability in a specific run
+      tags:
+        - Run
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: number
+            examples: {}
+        description: Array of seats number
+  /reservations:
+    post:
+      summary: Create a new reservation
+      tags:
+        - Reservation
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/reservation.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                runId:
+                  type: number
+                endStopId:
+                  type: number
+                seats:
+                  type: array
+                  items:
+                    type: number
+      description: Create a new reservation for the client.
+    parameters: []
+    get:
+      summary: ''
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/reservation.v1.yaml
+      description: Return the client reservations.
+  '/reservations/{ID}':
+    parameters:
+      - type: string
+        name: ID
+        in: path
+        required: true
+    get:
+      summary: Get reservation
+      tags:
+        - Reservation
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/reservation.v1.yaml
+      requestBody: {}
+      security:
+        - JWT: []
+  '/reservations/{ID}/cancel':
+    get:
+      summary: Cancel a reservation
+      tags:
+        - Reservation
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: boolean
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      requestBody: {}
+      security:
+        - JWT: []
+    parameters:
+      - schema:
+          type: string
+        name: ID
+        in: path
+        required: true
 components:
   schemas: {}
   securitySchemes:

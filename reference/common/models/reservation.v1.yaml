@@ -1,0 +1,19 @@
+title: Reservation
+type: object
+x-tags:
+  - Reservation
+properties:
+  id:
+    type: number
+  runId:
+    type: number
+  endStopId:
+    type: integer
+  paymentOrderId:
+    type: string
+  seats:
+    type: array
+    items:
+      type: number
+  status:
+    type: string

@@ -1,0 +1,9 @@
+title: Amenity
+type: object
+x-tags:
+  - Vehicle
+properties:
+  name:
+    type: string
+  iconUrl:
+    type: string

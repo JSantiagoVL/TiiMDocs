@@ -13,3 +13,7 @@ properties:
     type: integer
   modelImageUrl:
     type: string
+  amenites:
+    type: array
+    items:
+      $ref: ./amenity.v1.yaml
