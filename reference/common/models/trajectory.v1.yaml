@@ -1,0 +1,17 @@
+title: Trajectory
+type: object
+x-tags:
+  - Route
+properties:
+  id:
+    type: number
+  aStopId:
+    type: number
+  bStopId:
+    type: number
+  price:
+    type: number
+  time:
+    type: integer
+  routeId:
+    type: integer

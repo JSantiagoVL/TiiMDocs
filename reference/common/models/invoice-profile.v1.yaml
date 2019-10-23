@@ -1,0 +1,17 @@
+title: Invoice Profile
+type: object
+x-tags:
+  - Invoice
+properties:
+  id:
+    type: integer
+  clientId:
+    type: integer
+  rfc:
+    type: string
+  name:
+    type: string
+  address:
+    type: string
+  status:
+    type: string
