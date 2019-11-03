@@ -1,5 +1,6 @@
 title: Vehicle
 type: object
+description: "The vehicle. \nThe vehicle position is not calculated the 24 hrs"
 properties:
   id:
     type: integer
@@ -9,14 +10,26 @@ properties:
     type: string
   color:
     type: string
-  image:
+  imageUrl:
     type: string
   status:
     type: string
+    enum:
+      - ACITVE
+      - UNACTIVE
   year:
     type: string
   modelId:
     type: integer
+    description: The model is an entity. There are defined the amenities and other comon features.
+  lat:
+    type: number
+  long:
+    type: number
+  lastPositonUpdate:
+    type: string
+    format: date-time
+    description: 'YYYY-MM-DD HH:MM:SS'
 required:
   - id
   - ' license'
@@ -24,3 +37,5 @@ required:
   - color
   - status
   - modelId
+  - lat
+  - long

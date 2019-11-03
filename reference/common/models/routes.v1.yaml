@@ -1,35 +1,33 @@
-title: Routes
+title: Route
 type: object
-x-examples:
-  example-1: {}
+x-examples: {}
+description: 'The route is composed of multiple stops. One route, as defined in the system, can be traveled in only one way. Therefore the inverse route is a different route.'
 properties:
   id:
-    type: number
+    type: integer
   name:
     type: string
-  initialStop:
-    $ref: ./stop.v1.yaml
-  endingStop:
-    $ref: ./stop.v1.yaml
   mapResource:
     type: string
+    description: A link to GMaps route
   status:
     type: string
     enum:
       - ACTIVATED
       - DEACTIVATED
-  price:
-    type: string
   stops:
     type: array
     items:
       $ref: ./stop.v1.yaml
+  price:
+    type: number
+    description: The route price is the obtained from the full trajectory
+  operationAreaId:
+    type: integer
 required:
   - id
   - name
-  - initialStop
-  - endingStop
   - mapResource
   - status
+  - stops
   - price
-description: ''

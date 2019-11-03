@@ -1,0 +1,14 @@
+title: Operation Area
+type: object
+x-tags:
+  - OperationArea
+properties:
+  id:
+    type: integer
+  name:
+    type: string
+  location:
+    type: string
+  poligon:
+    type: string
+description: An operation area is the area where the service is available. The routes belong to an operation area and also the client. the client can switch between areas upon app logic.

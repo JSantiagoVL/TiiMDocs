@@ -2,16 +2,32 @@ title: Invoice Profile
 type: object
 x-tags:
   - Invoice
+description: "Perfil de facturacion. \nEn una primer version el cliente solo puede tener un perfil de facturacion. Nombres en español para compatibiliad con api externa"
 properties:
   id:
     type: integer
   clientId:
     type: integer
-  rfc:
+  sRfc:
     type: string
-  name:
+  sRazonSocial:
     type: string
-  address:
+  iTipoRegimen:
+    type: integer
+    description: '1: persona moral, 2: persona fisica'
+  sCorreoElectronico:
     type: string
-  status:
+  sUsoCfdi:
     type: string
+    default: E48
+    description: I01
+  iFacturacionAuto:
+    type: integer
+    description: '(1 | 0) Es perfil por default. Siempre = 1'
+required:
+  - id
+  - clientId
+  - sRfc
+  - sRazonSocial
+  - iTipoRegimen
+  - sCorreoElectronico

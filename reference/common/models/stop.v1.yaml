@@ -14,21 +14,29 @@ x-examples:
       type: DESCEND
       imageUrl: 'https://picsum.photos/seed/picsum/200/300'
       shortAddress: 'Juan Salvador Agraz 101 Contadero, CDMX'
+      status: '1'
 properties:
   id:
     type: integer
   name:
     type: string
   lat:
-    type: string
+    type: number
+    format: float
+    example: '-39.000231'
+    description: 'Float [+/-]xxxx.xxxxxx'
   long:
-    type: string
+    type: number
+    format: float
+    example: '120.111231'
+    description: 'Float [+/-]xxxx.xxxxxx'
   description:
     type: string
   nextStopId:
     type:
       - integer
       - 'null'
+    description: "If it's final, it will not have a nexStopId"
   type:
     type: string
     enum:
@@ -41,8 +49,11 @@ properties:
     type: integer
   shortAddress:
     type: string
-  activeStatus:
+  status:
     type: string
+    enum:
+      - ACTIVE
+      - DEACTIVATED
 required:
   - id
   - name
@@ -54,3 +65,5 @@ required:
   - imageUrl
   - routeId
   - shortAddress
+  - status
+description: "A stop belongs to a Route and it's a geographical point where persons can ascend or descend."

@@ -2,7 +2,7 @@ title: Driver
 type: object
 properties:
   id:
-    type: string
+    type: integer
   firstName:
     type: string
   lastName:
@@ -11,10 +11,13 @@ properties:
     type: string
   status:
     type: string
+    enum:
+      - ACTIVE
+      - DEACTIVATED
   defaultVehicleId:
     type: integer
 required:
   - id
   - firstName
   - lastName
-  - status
+description: 'The driver is the other part of the platform. A driver by default have an assigned vehicle. A car driver can be suspended or removed, in both cases its status switches to deactivated.'

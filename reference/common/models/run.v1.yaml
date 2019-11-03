@@ -1,8 +1,9 @@
 title: Run
 type: object
+description: 'A scheduled run that then could be transformed into a journey. Please notice the different available status. '
 properties:
   id:
-    type: string
+    type: integer
   routeId:
     type: integer
   vehicleId:
@@ -11,10 +12,22 @@ properties:
     type: integer
   departureDate:
     type: string
+    format: date-time
+    description: 'YYYY-MM-DD HH:MM:SS'
   status:
     type: string
+    enum:
+      - CANCELLED
+      - OPEN
+      - CLOSED
+      - COMPLETED
   stop:
     $ref: ./stop.v1.yaml
+  seatReservations:
+    type: array
+    example: '[resvId, 0, 0, 0, 0, 0, resvId, resvId, 0, 0, 0, resvId]'
+    items:
+      type: integer
 required:
   - id
   - routeId

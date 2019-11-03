@@ -2,16 +2,28 @@ title: Trajectory
 type: object
 x-tags:
   - Route
+description: "The trajectory contains the price and time of going from point A to B. \nA route have multiple trajectories. sum(n-1) from 1 to n"
 properties:
   id:
     type: number
   aStopId:
     type: number
+    description: ''
   bStopId:
     type: number
   price:
     type: number
+    description: DECIMAL xxx.xx
   time:
-    type: integer
+    type: number
+    description: 'DEC xx.x Time in minutes. 10.5 min '
   routeId:
     type: integer
+    description: The belong route
+required:
+  - id
+  - aStopId
+  - bStopId
+  - price
+  - time
+  - routeId

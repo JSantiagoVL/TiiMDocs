@@ -2,18 +2,28 @@ title: Reservation
 type: object
 x-tags:
   - Reservation
+description: |-
+  A client can make multiple reservations from one of the available runs.
+  A reservation has a variety of status depending on its life time.
+  A reservation can have as many as two seats.
 properties:
   id:
-    type: number
+    type: integer
   runId:
-    type: number
+    type: integer
   endStopId:
     type: integer
   paymentOrderId:
-    type: string
+    type: integer
   seats:
     type: array
     items:
-      type: number
+      type: integer
   status:
     type: string
+  createdAt:
+    type: string
+    format: date
+    description: 'YYYY-MM-DD HH:MM:SS'
+  clientId:
+    type: integer

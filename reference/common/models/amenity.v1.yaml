@@ -3,7 +3,12 @@ type: object
 x-tags:
   - Vehicle
 properties:
+  id:
+    type: integer
+  vehicleModeId:
+    type: integer
   name:
     type: string
   iconUrl:
     type: string
+description: An amenity belongs to a car model.

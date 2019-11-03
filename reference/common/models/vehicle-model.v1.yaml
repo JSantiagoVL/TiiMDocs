@@ -2,7 +2,7 @@ title: Vehicle Model
 type: object
 properties:
   id:
-    type: string
+    type: integer
   model:
     type: string
   seats:
@@ -17,3 +17,6 @@ properties:
     type: array
     items:
       $ref: ./amenity.v1.yaml
+description: |-
+  A vehicle is one of these type of models.
+  A vehicle model could have many amenities.
