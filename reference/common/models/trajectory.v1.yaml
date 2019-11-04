@@ -16,7 +16,7 @@ properties:
     description: DECIMAL xxx.xx
   time:
     type: number
-    description: 'DEC xx.x Time in minutes. 10.5 min '
+    description: 'DECIMAL xx.x Time in minutes. 10.5 min '
   routeId:
     type: integer
     description: The belong route

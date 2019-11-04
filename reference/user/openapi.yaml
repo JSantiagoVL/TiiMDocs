@@ -25,9 +25,9 @@ paths:
                 type:
                   type: string
                   enum:
-                    - user
-                    - driver
-                    - admin
+                    - USER
+                    - DRIVER
+                    - ADMIN
               required:
                 - firebaseUserId
                 - type
@@ -42,7 +42,7 @@ paths:
                 $ref: ../common/models/error.v1.yaml
       security:
         - JWT: []
-      description: Register in the local a new firebase user. If repeated return ok
+      description: Register in the ser server the new firebase user. If repeated return ok
   '/user/{userID}':
     get:
       summary: Get user data
@@ -77,6 +77,12 @@ paths:
       description: Get all routes
       security:
         - JWT: []
+      parameters:
+        - schema:
+            type: integer
+            default: '1'
+          in: query
+          name: operationAreaId
   '/routes/{routeID}':
     parameters:
       - type: string
@@ -109,7 +115,7 @@ paths:
         - JWT: []
   /stops:
     get:
-      summary: Get all stops
+      summary: Get all stops as specified by the optional filters
       responses:
         '200':
           description: OK
@@ -123,6 +129,32 @@ paths:
         - JWT: []
       tags:
         - Stop
+      parameters:
+        - schema:
+            type: integer
+            default: '1'
+          in: query
+          name: operationAreaId
+        - schema:
+            type: integer
+          in: query
+          name: routeId
+        - schema:
+            type: string
+            enum:
+              - ABOARD
+              - DESCEND
+              - BOTH
+          in: query
+          name: stopType
+        - schema:
+            type: string
+          in: query
+          name: keyword
+      description: |-
+        Get the stops as specified with the filters.
+        The filters have an additive AND behaviour.
+        All the filters are optional.
   '/stops/{stopID}':
     parameters:
       - type: string
@@ -190,7 +222,7 @@ paths:
       description: Calculate a Journey given a Run and a starting Stop.
   '/journey/destinations/{originStopID}':
     get:
-      summary: Get all posible stops given an origin
+      summary: Get all posible destinatios stops given an origin
       tags:
         - Journey
       responses:
@@ -212,7 +244,7 @@ paths:
         required: true
   /journey/origins:
     get:
-      summary: Get neraby ascending stops
+      summary: Get neraby ascending stops given coordinates (magic algorithm)
       responses:
         '200':
           description: OK
@@ -242,7 +274,7 @@ paths:
     parameters: []
   '/runs/bystop/{stopID}':
     get:
-      summary: Get all runs
+      summary: Get runs given an ascendig stop
       tags:
         - Run
       responses:
@@ -253,7 +285,14 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: ../common/models/run.v1.yaml
+                  type: object
+                  properties:
+                    run:
+                      $ref: ../common/models/run.v1.yaml
+                    amenities:
+                      type: array
+                      items:
+                        $ref: ../common/models/amenity.v1.yaml
       security:
         - JWT: []
       parameters:
@@ -267,8 +306,8 @@ paths:
             type: string
           in: query
           name: date
-          description: 'If date is set, days query is discarded'
-      description: Return an array of Runs given a starting stop.
+          description: 'Get runs from a specific day. If date is set, days query is discarded'
+      description: Return an array of Runs given a ascendig stop.
     parameters:
       - schema:
           type: integer
@@ -418,6 +457,38 @@ paths:
         name: ID
         in: path
         required: true
+  /journey/trajectory:
+    get:
+      summary: Get the time and price of a trajectory
+      tags:
+        - Trajectory
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/trajectory.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                originStopId:
+                  type: integer
+                destinationStopId:
+                  type: integer
+      description: |-
+        Get the time and price of a trajectory given a starting stop and a final stop from the same route.
+        The returning element is an onbject.
+        In case of unexistent stop or if the stops don't belong to the same route and an error will be returned.
 components:
   schemas: {}
   securitySchemes:
