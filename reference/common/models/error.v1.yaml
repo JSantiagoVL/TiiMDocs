@@ -1,9 +1,9 @@
 title: Error
 type: object
 properties:
-  id:
+  responseCode:
     type: integer
-  error_name:
+  message:
     type: string
-  error_description:
+  errors:
     type: string

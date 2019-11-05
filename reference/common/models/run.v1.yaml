@@ -26,6 +26,7 @@ properties:
   seatReservations:
     type: array
     example: '[resvId, 0, 0, 0, 0, 0, resvId, resvId, 0, 0, 0, resvId]'
+    description: '[0, 0, 0, 0, 0, 0, 0, 345, 345, 0, 0 ]'
     items:
       type: integer
 required:

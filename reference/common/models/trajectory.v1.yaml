@@ -5,18 +5,17 @@ x-tags:
 description: "The trajectory contains the price and time of going from point A to B. \nA route have multiple trajectories. sum(n-1) from 1 to n"
 properties:
   id:
-    type: number
+    type: integer
   aStopId:
-    type: number
-    description: ''
+    type: integer
   bStopId:
-    type: number
+    type: integer
   price:
     type: number
     description: DECIMAL xxx.xx
   time:
-    type: number
-    description: 'DECIMAL xx.x Time in minutes. 10.5 min '
+    type: integer
+    description: 'INT xx Time in minutes. 10 min '
   routeId:
     type: integer
     description: The belong route

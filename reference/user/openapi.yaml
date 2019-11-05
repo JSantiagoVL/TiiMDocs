@@ -271,6 +271,7 @@ paths:
           name: radious
       tags:
         - Journey
+      description: ''
     parameters: []
   '/runs/bystop/{stopID}':
     get:
@@ -487,7 +488,7 @@ paths:
                   type: integer
       description: |-
         Get the time and price of a trajectory given a starting stop and a final stop from the same route.
-        The returning element is an onbject.
+        The returning element is an on object.
         In case of unexistent stop or if the stops don't belong to the same route and an error will be returned.
 components:
   schemas: {}
