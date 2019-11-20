@@ -2,6 +2,7 @@ title: Operation Area
 type: object
 x-tags:
   - OperationArea
+description: An operation area is the area where the service is available. The routes belong to an operation area and also the client. the client can switch between areas upon app logic.
 properties:
   id:
     type: integer
@@ -11,4 +12,6 @@ properties:
     type: string
   poligon:
     type: string
-description: An operation area is the area where the service is available. The routes belong to an operation area and also the client. the client can switch between areas upon app logic.
+required:
+  - id
+  - name

@@ -490,6 +490,63 @@ paths:
         Get the time and price of a trajectory given a starting stop and a final stop from the same route.
         The returning element is an on object.
         In case of unexistent stop or if the stops don't belong to the same route and an error will be returned.
+  /operationarea/:
+    get:
+      summary: Get the list of all operation areas
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/operation-area.v1.yaml
+      security:
+        - JWT: []
+    parameters: []
+  /operation-area/insidearea/:
+    get:
+      parameters:
+        - schema:
+            type: number
+          in: query
+          name: lat
+          required: true
+        - schema:
+            type: number
+          in: query
+          name: long
+          required: true
+      summary: Get the area where the coordinates belong
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/operation-area.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+    parameters: []
+  '/operation-area/{areaID}':
+    parameters:
+      - type: string
+        name: areaID
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Get the specified area
+      tags:
+        - OperationArea
+      responses: {}
 components:
   schemas: {}
   securitySchemes:
