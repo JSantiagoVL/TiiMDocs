@@ -15,6 +15,7 @@ x-examples:
       imageUrl: 'https://picsum.photos/seed/picsum/200/300'
       shortAddress: 'Juan Salvador Agraz 101 Contadero, CDMX'
       status: '1'
+description: "A stop belongs to a Route and it's a geographical point where persons can ascend or descend."
 properties:
   id:
     type: integer
@@ -54,6 +55,8 @@ properties:
     enum:
       - ACTIVE
       - DEACTIVATED
+  isInitial:
+    type: boolean
 required:
   - id
   - name
@@ -66,4 +69,3 @@ required:
   - routeId
   - shortAddress
   - status
-description: "A stop belongs to a Route and it's a geographical point where persons can ascend or descend."
