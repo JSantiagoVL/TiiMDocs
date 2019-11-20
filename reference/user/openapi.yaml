@@ -547,6 +547,27 @@ paths:
       tags:
         - OperationArea
       responses: {}
+  '/routes/{routeID}/add_stop':
+    parameters:
+      - type: string
+        name: routeID
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      summary: Add a stop to route
+      tags:
+        - Stop
+        - Route
+      responses: {}
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/stop.v1.yaml
 components:
   schemas: {}
   securitySchemes:
