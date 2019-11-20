@@ -335,7 +335,7 @@ paths:
         name: ID
         in: path
         required: true
-  '/runs/{runID}/validateseats':
+  '/runs/{runID}/validate-seats':
     parameters:
       - type: string
         name: runID
@@ -506,7 +506,7 @@ paths:
       security:
         - JWT: []
     parameters: []
-  /operation-area/insidearea/:
+  /operation-area/inside-area/:
     get:
       parameters:
         - schema:
@@ -547,7 +547,7 @@ paths:
       tags:
         - OperationArea
       responses: {}
-  '/routes/{routeID}/add_stop':
+  '/routes/{routeID}/add-stop':
     parameters:
       - type: string
         name: routeID
