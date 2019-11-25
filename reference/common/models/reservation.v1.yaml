@@ -28,3 +28,7 @@ properties:
     description: 'YYYY-MM-DD HH:MM:SS'
   clientId:
     type: integer
+  folio:
+    type: string
+  startStopId:
+    type: integer

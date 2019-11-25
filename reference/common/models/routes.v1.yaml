@@ -30,4 +30,4 @@ required:
   - mapResource
   - status
   - stops
-  - price
+  - operationAreaId

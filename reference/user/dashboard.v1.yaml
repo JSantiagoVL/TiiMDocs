@@ -1,0 +1,252 @@
+openapi: 3.0.0
+info:
+  title: Dashboard
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /operationareas:
+    post:
+      summary: Create a new operation area
+      tags:
+        - OperationArea
+      responses: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/operation-area.v1.yaml
+    get:
+      summary: Get list of all operation areas
+      tags:
+        - OperationArea
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/operation-area.v1.yaml
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+      security:
+        - jwt: []
+      description: ''
+    parameters: []
+  '/operationareas/{areaId}':
+    parameters:
+      - type: string
+        name: areaId
+        in: path
+        required: true
+    get:
+      summary: Get a specific operation area
+      tags:
+        - OperationArea
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/operation-area.v1.yaml
+      security:
+        - jwt: []
+    patch:
+      summary: ''
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/operation-area.v1.yaml
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/operation-area.v1.yaml
+  '/operationareas/{areaId}/routes':
+    parameters:
+      - type: string
+        name: areaId
+        in: path
+        required: true
+    get:
+      summary: Get operation area routes
+      tags:
+        - OperationArea
+        - Route
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/routes.v1.yaml
+      security:
+        - jwt: []
+    post:
+      summary: Add a route to the operation area
+      tags:
+        - OperationArea
+        - Route
+      responses: {}
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/routes.v1.yaml
+  '/route/{routeId}':
+    parameters:
+      - type: string
+        name: routeId
+        in: path
+        required: true
+    get:
+      summary: Get a specific route
+      tags:
+        - Route
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/routes.v1.yaml
+      security:
+        - jwt: []
+    delete:
+      summary: Delete specific route
+      tags:
+        - Route
+      responses:
+        '202':
+          description: Accepted
+      requestBody: {}
+      security:
+        - jwt: []
+    patch:
+      summary: ''
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/routes.v1.yaml
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/routes.v1.yaml
+  '/route/{routeId}/stops/':
+    parameters:
+      - type: string
+        name: routeId
+        in: path
+        required: true
+    get:
+      summary: Get the list of stops from the route
+      tags:
+        - Stop
+        - Route
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/stop.v1.yaml
+      security:
+        - jwt: []
+    post:
+      summary: Create and add a new stop in the route
+      tags:
+        - Stop
+        - Route
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/stop.v1.yaml
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/stop.v1.yaml
+  '/stop/{stopId}':
+    parameters:
+      - type: string
+        name: stopId
+        in: path
+        required: true
+    get:
+      summary: Get a specific stop
+      tags:
+        - Stop
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/stop.v1.yaml
+      security:
+        - jwt: []
+      requestBody: {}
+    patch:
+      summary: Update the specific stop
+      tags:
+        - Stop
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/stop.v1.yaml
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/stop.v1.yaml
+    delete:
+      summary: Delete the specific stop
+      tags:
+        - Stop
+      responses:
+        '202':
+          description: Accepted
+      security:
+        - jwt: []
+components:
+  schemas: {}
+  securitySchemes:
+    jwt:
+      name: API Key
+      type: apiKey
+      in: header

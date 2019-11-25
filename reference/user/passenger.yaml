@@ -411,6 +411,12 @@ paths:
                 items:
                   $ref: ../common/models/reservation.v1.yaml
       description: Return the client reservations.
+      parameters:
+        - schema:
+            type: string
+            default: CONFIRMED
+          in: query
+          name: status
   '/reservations/{ID}':
     parameters:
       - type: string
@@ -421,16 +427,29 @@ paths:
       summary: Get reservation
       tags:
         - Reservation
+      requestBody: {}
+      security:
+        - JWT: []
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: ../common/models/reservation.v1.yaml
-      requestBody: {}
-      security:
-        - JWT: []
+                type: object
+                properties:
+                  reservation:
+                    $ref: ../common/models/reservation.v1.yaml
+                  departureDate:
+                    type: string
+                  paymentAmount:
+                    type: number
+                  routeName:
+                    type: string
+                  vehicle:
+                    $ref: ../common/models/vehicle-model.v1.yaml
+                  driverName:
+                    type: string
   '/reservations/{ID}/cancel':
     get:
       summary: Cancel a reservation
@@ -490,7 +509,7 @@ paths:
         Get the time and price of a trajectory given a starting stop and a final stop from the same route.
         The returning element is an on object.
         In case of unexistent stop or if the stops don't belong to the same route and an error will be returned.
-  /operationarea/:
+  /operation-areas/:
     get:
       summary: Get the list of all operation areas
       tags: []
@@ -506,7 +525,7 @@ paths:
       security:
         - JWT: []
     parameters: []
-  /operation-area/inside-area/:
+  /operation-areas/inside-area/:
     get:
       parameters:
         - schema:
@@ -533,8 +552,9 @@ paths:
             application/json:
               schema:
                 type: object
+      description: ''
     parameters: []
-  '/operation-area/{areaID}':
+  '/operation-areas/{areaID}':
     parameters:
       - type: string
         name: areaID
@@ -568,6 +588,34 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/stop.v1.yaml
+  '/runs/{runId}/reservate-seat':
+    parameters:
+      - type: string
+        name: runId
+        in: path
+        required: true
+    patch:
+      summary: Reservate the selected seats on the selecter run
+      tags:
+        - Run
+        - Seat
+      responses:
+        '202':
+          description: Accepted
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+            examples:
+              example-1:
+                value:
+                  - 0
+                  - 2
 components:
   schemas: {}
   securitySchemes:
