@@ -471,6 +471,7 @@ paths:
       requestBody: {}
       security:
         - JWT: []
+      description: ''
     parameters:
       - schema:
           type: string
@@ -567,55 +568,6 @@ paths:
       tags:
         - OperationArea
       responses: {}
-  '/routes/{routeID}/add-stop':
-    parameters:
-      - type: string
-        name: routeID
-        in: path
-        required: true
-        schema:
-          type: integer
-    post:
-      summary: Add a stop to route
-      tags:
-        - Stop
-        - Route
-      responses: {}
-      security:
-        - JWT: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: ../common/models/stop.v1.yaml
-  '/runs/{runId}/reservate-seat':
-    parameters:
-      - type: string
-        name: runId
-        in: path
-        required: true
-    patch:
-      summary: Reservate the selected seats on the selecter run
-      tags:
-        - Run
-        - Seat
-      responses:
-        '202':
-          description: Accepted
-      security:
-        - JWT: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: integer
-            examples:
-              example-1:
-                value:
-                  - 0
-                  - 2
 components:
   schemas: {}
   securitySchemes:
