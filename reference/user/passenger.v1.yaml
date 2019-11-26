@@ -273,7 +273,7 @@ paths:
         - Journey
       description: ''
     parameters: []
-  '/runs/bystop/{stopID}':
+  '/runs/by-stop/{stopID}':
     get:
       summary: Get runs given an ascendig stop
       tags:
@@ -327,6 +327,12 @@ paths:
             application/json:
               schema:
                 $ref: ../common/models/run.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
       security:
         - JWT: []
     parameters:
@@ -335,7 +341,7 @@ paths:
         name: ID
         in: path
         required: true
-  '/runs/{runID}/validate-seats':
+  '/runs/{runID}/reserve-seats':
     parameters:
       - type: string
         name: runID
@@ -343,17 +349,35 @@ paths:
         required: true
         schema:
           type: integer
-    get:
-      summary: Validate seats availability in a specific run
-      tags:
-        - Run
+    patch:
+      summary: Reserve seats and verfy availability
       responses:
         '200':
           description: OK
+        '428':
+          description: Precondition Required
           content:
             application/json:
               schema:
-                type: boolean
+                type: array
+                items:
+                  type: number
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+              examples:
+                example-1:
+                  value:
+                    - 0
+                    - 4
+      description: |-
+        Take: an array of one or two numbers, indicating the seat position (same position as the array position)
+        Returns: 200. If seats reservation went ok
+                 428. Seats were occupied before reservating. Indicates the unavailable seats in an array.
+                 500. Error at operation.
       requestBody:
         content:
           application/json:
@@ -361,8 +385,43 @@ paths:
               type: array
               items:
                 type: number
-            examples: {}
-        description: Array of seats number
+            examples:
+              example-1:
+                value:
+                  - 0
+                  - 4
+      security:
+        - JWT: []
+    get:
+      summary: Get reserved seats from the given run
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                Seats map example:
+                  value:
+                    - '0'
+                    - '0'
+                    - '0'
+                    - Gfaj78Klo89iukl98
+                    - '0'
+                    - '0'
+                    - '0'
+                    - '0'
+                    - '0'
+                    - '0'
+                    - '0'
+                    - '0'
+      security:
+        - JWT: []
+      requestBody: {}
+      description: Returns the seats map as an string array
   /reservations:
     post:
       summary: Create a new reservation
@@ -400,7 +459,7 @@ paths:
       description: Create a new reservation for the client.
     parameters: []
     get:
-      summary: ''
+      summary: Get all reservations
       responses:
         '200':
           description: OK
