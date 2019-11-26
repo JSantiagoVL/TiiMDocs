@@ -392,36 +392,6 @@ paths:
                   - 4
       security:
         - JWT: []
-    get:
-      summary: Get reserved seats from the given run
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-              examples:
-                Seats map example:
-                  value:
-                    - '0'
-                    - '0'
-                    - '0'
-                    - Gfaj78Klo89iukl98
-                    - '0'
-                    - '0'
-                    - '0'
-                    - '0'
-                    - '0'
-                    - '0'
-                    - '0'
-                    - '0'
-      security:
-        - JWT: []
-      requestBody: {}
-      description: Returns the seats map as an string array
   /reservations:
     post:
       summary: Create a new reservation
@@ -627,6 +597,54 @@ paths:
       tags:
         - OperationArea
       responses: {}
+  '/runs/{runID}/seats':
+    parameters:
+      - type: string
+        name: runID
+        in: path
+        required: true
+    get:
+      summary: 'Get the list of seats '
+      tags:
+        - Run
+        - Reservation
+        - Seats
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              examples:
+                Seats example:
+                  value:
+                    - '0'
+                    - '0'
+                    - '0'
+                    - Kijdi9098129L67
+                    - '0'
+                    - '0'
+                    - '0'
+                    - '0'
+                    - '0'
+                    - '0'
+                    - '0'
+                    - '0'
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      description: Retun an array of strings. Zero is an empty seat
+      requestBody: {}
+      security:
+        - JWT: []
 components:
   schemas: {}
   securitySchemes:
