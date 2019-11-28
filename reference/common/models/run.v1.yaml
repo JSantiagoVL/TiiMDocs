@@ -6,7 +6,7 @@ properties:
     type: integer
   routeId:
     type: integer
-  vehicleId:
+  busId:
     type: integer
   driverId:
     type: integer
@@ -32,6 +32,6 @@ properties:
 required:
   - id
   - routeId
-  - vehicleId
+  - busId
   - driverId
   - departureDate
