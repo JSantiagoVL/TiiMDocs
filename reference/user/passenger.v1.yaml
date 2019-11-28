@@ -354,19 +354,62 @@ paths:
       responses:
         '202':
           description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservedSeats:
+                    type: array
+                    items:
+                      type: integer
+                  unavailableSeats:
+                    type: array
+                    items:
+                      type: integer
+              examples:
+                example:
+                  value:
+                    reservedSeats:
+                      - 6
+                    liberatedSeats:
+                      - 7
+                    unavailableSeats: []
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
         '428':
           description: Precondition Required
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: number
+                type: object
+                properties:
+                  reservedSeats:
+                    type: array
+                    items:
+                      type: integer
+                  unavailableSeats:
+                    type: array
+                    items:
+                      type: integer
+                  liberatedSeats:
+                    type: array
+                    items:
+                      type: integer
               examples:
                 example:
                   value:
-                    - 6
-                    - 7
+                    reservedSeats:
+                      - 6
+                      - 7
+                    liberatedSeats:
+                      - 7
+                    unavailableSeats:
+                      - 6
         '500':
           description: Internal Server Error
           content:
@@ -378,26 +421,35 @@ paths:
                   value:
                     - 0
                     - 4
-      description: |-
-        Take: an array of one or two numbers, indicating the seat position (same position as the array position)
-        Response: 202. If seats reservation went ok.
-                 428. Seats were occupied before reservating, return the unavailable seats in an array.
-                 500. Error at operation.
+      description: "Take: an object with arrays of one or two numbers, indicating the seat position (same position as position in the seatReservations array)\n\n\nResponse:\n * 202: If seats reservation went ok.\n * 404: The specifieded run dosn't exist.\n * 428: Seats were occupied before reservating, return the unavailable seats in an array\n * 500: Error at operation.\n \n Operation:\n \n 1. The system will validate if the requested seats are available.\n 2. The system will validate if the Run is on OPEN status.\n 2. The system will update the seatReservations at the specifieded run with the user ID as in JWT\n 2. If the previous is valid, the system will liberate the requested seats.\n \n * In case there is not available seats, the system will return 428 with the list of unavailable seats.\n "
       requestBody:
+        description: "In the example: \n1. reserve seats that ocupies the 6 and 7 position inside the array.\n2. Liberate the seat at position 6\n3. As result only the seat at position 7 is reserved"
         content:
           application/json:
             schema:
-              type: array
-              items:
-                type: number
+              type: object
+              properties:
+                reserveSeats:
+                  type: array
+                  items:
+                    type: integer
+                liberateSeats:
+                  type: array
+                  items:
+                    type: integer
             examples:
               example:
                 value:
-                  - 6
-                  - 7
-        description: 'In the example: reserve seats that ocupies the 6 and 7 position inside the array.'
+                  reserveSeats:
+                    - 6
+                    - 7
+                  liberateSeats:
+                    - 7
       security:
         - JWT: []
+      tags:
+        - Reservation
+        - Seats
   /reservations:
     post:
       summary: Create a new reservation
@@ -629,8 +681,36 @@ paths:
                       type: string
                   cols:
                     type: integer
+              examples:
+                example:
+                  value:
+                    seatsReservations:
+                      - 124KJi87640ER45
+                      - '0'
+                      - '0'
+                      - '0'
+                      - '0'
+                      - x
+                      - '0'
+                      - '0'
+                      - '0'
+                      - x
+                      - '0'
+                      - '0'
+                      - x
+                      - x
+                      - '0'
+                      - '0'
+                      - '0'
+                      - x
+                      - x
+                      - x
         '404':
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
         '500':
           description: Internal Server Error
           content:

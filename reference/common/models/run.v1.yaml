@@ -25,8 +25,8 @@ properties:
     $ref: ./stop.v1.yaml
   seatReservations:
     type: array
-    example: '[resvId, 0, 0, 0, 0, 0, resvId, resvId, 0, 0, 0, resvId]'
-    description: '[0, 0, 0, 0, 0, 0, 0, 345, 345, 0, 0 ]'
+    description: 'One dimention array. Values: "0" empty space, "x" not a seat, "other strings" occupied seat'
+    example: '["0","0","0","0", "0","x","0","0", "0","x","0","0", "x","x","0","0", "0","x","x","x",]'
     items:
       type: string
 required:

@@ -17,7 +17,7 @@ properties:
     type: integer
   seats:
     type: array
-    description: '[3, 4] Seats 4 and 5 (cero adjustment)'
+    description: '[3, 4] Seats 3 and 4'
     items:
       type: integer
   status:
