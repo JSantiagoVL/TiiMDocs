@@ -151,10 +151,7 @@ paths:
             type: string
           in: query
           name: keyword
-      description: |-
-        Get the stops as specified with the filters.
-        The filters have an additive AND behaviour.
-        All the filters are optional.
+      description: "Functionallity:\n* Get the stops as specified with the filters.\n* The filters have an additive AND behaviour.\n* All the filters are optional.\n* Filter by stopType, possible values: ABOARD, DESCEND, BOTH. \nIf ABOARD is selected then system will search by ABOARD type and BOTH type, in order to return all posible aboard stops. Same for descend."
   '/stops/{stopID}':
     parameters:
       - type: string
@@ -481,13 +478,14 @@ paths:
                 endStopId:
                   type: number
                 seats:
-                  type: array
-                  items:
-                    type: number
-      description: Create a new reservation for the client.
+                  type: integer
+                  description: The amount of reserved seats 1 or 2
+                startStopId:
+                  type: integer
+      description: "Create a new reservation for the client.\n\nInternall function:\n\n1. Search for the user reserved seats inside the Run.\n2. Verify the amount of setas reserved equals seats in the request.\n3. Set reservation status as IN_PAYMENT\n4. Generate paymentOrder ans assign to the current reservation.\n5. The folio is made of runID+endStopID+TIMESTAMP_UNIX\n6. Save reservation\n7. Return the reservation\n\n* The userID is provided by the JWT token. "
     parameters: []
     get:
-      summary: Get all reservations
+      summary: Get all client reservations
       responses:
         '200':
           description: OK
@@ -497,7 +495,9 @@ paths:
                 type: array
                 items:
                   $ref: ../common/models/reservation.v1.yaml
-      description: Return the client reservations.
+              examples:
+                example-1: {}
+      description: "Return the client reservations.\n\nOperation:\n\n* The reservations will be filtered by the user who made the request, userID as given in JWT.\n* Fileter by status, possible values: \n\n  * IN_PAYMENT: Awaiting for payment\n\n  * CONFIRMED: Payment done.\n\n  * CANCELED_USER: User canceled the reservation.\n\n  * CANCELED_EXPIRED: No payment in more than 5 min.\n\n  * CANCELED_ADMIN: Some admin canceled the reservation.\n\n  * IN_PROGRESS: The passenger is in the journey.\n\n  * ENDED: The journey ended.\n\n  * ABSENT: The bus leaved without the passenger."
       parameters:
         - schema:
             type: string
@@ -679,8 +679,11 @@ paths:
                     type: array
                     items:
                       type: string
-                  cols:
+                  seatCols:
                     type: integer
+                required:
+                  - seatsReservations
+                  - seatCols
               examples:
                 example:
                   value:
@@ -705,6 +708,7 @@ paths:
                       - x
                       - x
                       - x
+                    seatCols: 4
         '404':
           description: Not Found
           content:
@@ -717,7 +721,7 @@ paths:
             application/json:
               schema:
                 $ref: ../common/models/error.v1.yaml
-      description: 'Retuns an array of strings. Zero is an empty seat, x represent an emty space inside the bus (Not a seat), any different string is an occupied seat represented by the user Id. You need the cols field to convert the array into a NxM matrix'
+      description: "Retuns an array of strings. \n\nZero is an empty seat, x represent an emty space inside the bus (Not a seat), any different string is an occupied seat represented by the user Id. You need the cols field to convert the array into a NxM matrix"
       requestBody: {}
       security:
         - JWT: []

@@ -2,10 +2,7 @@ title: Reservation
 type: object
 x-tags:
   - Reservation
-description: |-
-  A client can make multiple reservations from one of the available runs.
-  A reservation has a variety of status depending on its life time.
-  A reservation can have as many as two seats.
+description: "A client can make multiple reservations from one of the available runs.\n\nA reservation has a variety of status depending on its life time.\n\nA reservation can have as many as two seats places.\n\nSatus possible values: \n\n  * IN_PAYMENT: Awaiting for payment\n\n  * CONFIRMED: Payment done.\n\n  * CANCELED_USER: User canceled the reservation.\n\n  * CANCELED_EXPIRED: No payment in more than 5 min.\n\n  * CANCELED_ADMIN: Some admin canceled the reservation.\n\n  * IN_PROGRESS: The passenger is in the journey.\n\n  * ENDED: The journey ended.\n\n  * ABSENT: The bus leaved without the passenger."
 properties:
   id:
     type: integer
@@ -22,6 +19,15 @@ properties:
       type: integer
   status:
     type: string
+    enum:
+      - CONFIRMED
+      - CANCELED_USER
+      - CANCELED_EXPIRED
+      - CANCELED_ADMIN
+      - IN_PROGRESS
+      - ENDED
+      - ABSENT
+      - IN_PAYMENT
   createdAt:
     type: string
     format: date

@@ -1,7 +1,8 @@
 title: Vehicle Model
 type: object
 description: |-
-  A vehicle is one of these type of models.
+  A Bus one of these type of models.
+
   A vehicle model could have many amenities.
 properties:
   id:
