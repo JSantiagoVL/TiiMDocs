@@ -400,11 +400,8 @@ paths:
               examples:
                 example:
                   value:
-                    reservedSeats:
-                      - 6
-                      - 7
-                    liberatedSeats:
-                      - 7
+                    reservedSeats: []
+                    liberatedSeats: []
                     unavailableSeats:
                       - 6
         '500':
