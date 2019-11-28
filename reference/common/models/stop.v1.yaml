@@ -31,8 +31,6 @@ properties:
     format: float
     example: '120.111231'
     description: 'Float [+/-]xxxx.xxxxxx'
-  description:
-    type: string
   nextStopId:
     type:
       - integer
@@ -62,7 +60,6 @@ required:
   - name
   - lat
   - long
-  - description
   - nextStopId
   - type
   - imageUrl

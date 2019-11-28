@@ -615,24 +615,14 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: string
-              examples:
-                Seats example:
-                  value:
-                    - '0'
-                    - '0'
-                    - '0'
-                    - Kijdi9098129L67
-                    - '0'
-                    - '0'
-                    - '0'
-                    - '0'
-                    - '0'
-                    - '0'
-                    - '0'
-                    - '0'
+                type: object
+                properties:
+                  seatsReservations:
+                    type: array
+                    items:
+                      type: string
+                  cols:
+                    type: integer
         '404':
           description: Not Found
         '500':
@@ -641,7 +631,7 @@ paths:
             application/json:
               schema:
                 $ref: ../common/models/error.v1.yaml
-      description: Retun an array of strings. Zero is an empty seat
+      description: 'Retuns an array of strings. Zero is an empty seat, x represent an emty space inside the bus (Not a seat), any different string is an occupied seat represented by the user Id. You need the cols field to convert the array into a NxM matrix'
       requestBody: {}
       security:
         - JWT: []

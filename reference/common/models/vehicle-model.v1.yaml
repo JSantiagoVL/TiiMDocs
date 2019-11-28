@@ -1,5 +1,8 @@
 title: Vehicle Model
 type: object
+description: |-
+  A vehicle is one of these type of models.
+  A vehicle model could have many amenities.
 properties:
   id:
     type: integer
@@ -7,16 +10,18 @@ properties:
     type: string
   seats:
     type: integer
-  seatsMapImageUrl:
-    type: string
-  seatRows:
-    type: integer
+  seatsMask:
+    type: array
+    description: Sets the reference for the seat reservations inside a new run
+    example: "['0','0','0','0', '0','x','0','0', '0','x','0','0', 'x','x','0','0', '0','x','x','x',]"
+    items:
+      type: string
   modelImageUrl:
     type: string
   amenites:
     type: array
     items:
       $ref: ./amenity.v1.yaml
-description: |-
-  A vehicle is one of these type of models.
-  A vehicle model could have many amenities.
+  cols:
+    type: integer
+    description: 'Indicates the cols inside seat mask, also indicates the chunck to create the nxm matrix'
