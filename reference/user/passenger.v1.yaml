@@ -352,8 +352,8 @@ paths:
     patch:
       summary: Reserve seats and verfy availability
       responses:
-        '200':
-          description: OK
+        '202':
+          description: Accepted
         '428':
           description: Precondition Required
           content:
@@ -362,6 +362,11 @@ paths:
                 type: array
                 items:
                   type: number
+              examples:
+                example:
+                  value:
+                    - 6
+                    - 7
         '500':
           description: Internal Server Error
           content:
@@ -375,8 +380,8 @@ paths:
                     - 4
       description: |-
         Take: an array of one or two numbers, indicating the seat position (same position as the array position)
-        Returns: 200. If seats reservation went ok
-                 428. Seats were occupied before reservating. Indicates the unavailable seats in an array.
+        Response: 202. If seats reservation went ok.
+                 428. Seats were occupied before reservating, return the unavailable seats in an array.
                  500. Error at operation.
       requestBody:
         content:
@@ -386,10 +391,11 @@ paths:
               items:
                 type: number
             examples:
-              example-1:
+              example:
                 value:
-                  - 0
-                  - 4
+                  - 6
+                  - 7
+        description: 'In the example: reserve seats that ocupies the 6 and 7 position inside the array.'
       security:
         - JWT: []
   /reservations:
