@@ -5,7 +5,7 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /operationareas:
+  /operation-areas:
     post:
       summary: Create a new operation area
       tags:
@@ -40,7 +40,7 @@ paths:
         - jwt: []
       description: ''
     parameters: []
-  '/operationareas/{areaId}':
+  '/operation-areas/{areaId}':
     parameters:
       - type: string
         name: areaId
@@ -75,7 +75,7 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/operation-area.v1.yaml
-  '/operationareas/{areaId}/routes':
+  '/operation-areas/{areaId}/routes':
     parameters:
       - type: string
         name: areaId
