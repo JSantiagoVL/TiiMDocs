@@ -257,7 +257,7 @@ paths:
       description: "Get the possible routes for the view, given the aboard and descend stops\n\nOperation: \n\n* Init coinidences Array as [{startStop: aboardStop, endStop: descnedStop}]\n* Search all stops inside Stops of type ABOARD wich coordinates are the same as the abord stop\n* If the result coincidence > 1 then:\n* Search all stops of type DESCEND wich coordinates are the same as the abord stop \n* If the result coincidence > 1 then:\n* Iterate over the ascending results and find in the desend result an stop that have the same route id. Make a pair from the coincidence and save.\n* End IF\n* End IF\n* For each coincidence:  Get the trajectory data that matchs the pair.\n\n\n\n"
   '/journey/destinations/{originStopID}':
     get:
-      summary: Get all posible destinatios stops given an origin
+      summary: Get all possible destinations stops given an origin
       tags:
         - Journey
       responses:
@@ -278,8 +278,9 @@ paths:
       security:
         - JWT: []
       description: |-
-        Get all posible destinatios stops given an origin.
-        The same origin stop could live in other routes, therfore we need all the other stops that live in other routes an get all the destinations
+        Get all posible destinations stops given an origin.
+
+        The same origin stop could live in other routes, therfore we need all the other stops that live in other routes an then get all the destinations.
 
         Operation:
 
@@ -1041,6 +1042,33 @@ paths:
         name: operationArea
         in: path
         required: true
+  '/journey/origins/{descendStopId}':
+    parameters:
+      - schema:
+          type: string
+        name: descendStopId
+        in: path
+        required: true
+    get:
+      summary: Get all possible aboard stops given a descend stop (The inverse of destinations)
+      tags:
+        - Journey
+        - Stop
+      responses: {}
+      operationId: 'get-journey-origins-{stopId}'
+      security:
+        - JWT: []
+      description: |+
+        Get all posible aboard stops given a descend stop (The inverse of destinations)
+
+        The same descend stop (same coordinates) could live in other routes, therfore we need all the other stops that live in other routes an then get all the origins
+
+        Operation:
+
+        * Get the stops that have the same coordinates that the descend stop and are of type DESCEND
+        * For each stop obtain the prev stops in the route, the stops need to be of type ABOARD or BOTH.
+
+
 components:
   schemas: {}
   securitySchemes:
