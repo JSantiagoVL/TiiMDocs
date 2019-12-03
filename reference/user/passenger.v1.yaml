@@ -1054,7 +1054,21 @@ paths:
       tags:
         - Journey
         - Stop
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/stop.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
       operationId: 'get-journey-origins-{stopId}'
       security:
         - JWT: []
