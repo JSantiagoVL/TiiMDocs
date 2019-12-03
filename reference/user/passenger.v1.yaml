@@ -103,13 +103,8 @@ paths:
                 properties:
                   route:
                     $ref: ../common/models/routes.v1.yaml
-                  stops:
-                    type: array
-                    items:
-                      $ref: ../common/models/stop.v1.yaml
                 required:
                   - route
-                  - stops
       requestBody: {}
       security:
         - JWT: []
@@ -217,6 +212,49 @@ paths:
           name: endingStop
           required: true
       description: Calculate a Journey given a Run and a starting Stop.
+    patch:
+      summary: Get the possible routes given the aboard and descend stops
+      tags:
+        - Journey
+        - Route
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+            application/xml:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    routeId:
+                      type: integer
+                    routeName:
+                      type: string
+                    aboardStop:
+                      $ref: ../common/models/stop.v1.yaml
+                    descendStop:
+                      $ref: ../common/models/stop.v1.yaml
+                    trajectory:
+                      $ref: ../common/models/trajectory.v1.yaml
+      operationId: patch-journey-calculate
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                aboardStopId:
+                  type: integer
+                descendStop:
+                  type: integer
+      description: "Get the possible routes for the view, given the aboard and descend stops\n\nOperation: \n\n* Init coinidences Array as [{startStop: aboardStop, endStop: descnedStop}]\n* Search all stops inside Stops of type ABOARD wich coordinates are the same as the abord stop\n* If the result coincidence > 1 then:\n* Search all stops of type DESCEND wich coordinates are the same as the abord stop \n* If the result coincidence > 1 then:\n* Iterate over the ascending results and find in the desend result an stop that have the same route id. Make a pair from the coincidence and save.\n* End IF\n* End IF\n* For each coincidence:  Get the trajectory data that matchs the pair.\n\n\n\n"
   '/journey/destinations/{originStopID}':
     get:
       summary: Get all posible destinatios stops given an origin
@@ -231,8 +269,22 @@ paths:
                 type: array
                 items:
                   $ref: ../common/models/stop.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
       security:
         - JWT: []
+      description: |-
+        Get all posible destinatios stops given an origin.
+        The same origin stop could live in other routes, therfore we need all the other stops that live in other routes an get all the destinations
+
+        Operation:
+
+        * Get the stops that have the same coordinates that the originStop and are of type ABOARD
+        * For each stop obtain the next stops in the route, the stops need to be of type DESCEND or BOTH.
     parameters:
       - schema:
           type: string
@@ -305,7 +357,19 @@ paths:
           in: query
           name: date
           description: 'Get runs from a specific day. If date is set, days query is discarded'
-      description: Return an array of Runs given a ascendig stop.
+      description: |+
+        Return an array of Runs given an ascendig stop.
+
+        Operation:
+
+        1. Validate that the stop exists and is ACTIVE
+        2. Search for all runs with OPEN status
+        3. Then additionally search for runs which departureDate >= currentDate+3min.
+        4. If date filter is set, then additionally search for runs which departureDate <= query.date at 23:59 hrs
+        5. If days are set calculate the days betwen that range.
+
+
+
     parameters:
       - schema:
           type: integer
@@ -338,14 +402,8 @@ paths:
         name: ID
         in: path
         required: true
-  '/runs/{runID}/reserve-seats':
-    parameters:
-      - type: string
-        name: runID
-        in: path
-        required: true
-        schema:
-          type: integer
+  '':
+    parameters: []
     patch:
       summary: Reserve seats and verfy availability
       responses:
@@ -415,7 +473,7 @@ paths:
                   value:
                     - 0
                     - 4
-      description: "Take: an object with arrays of one or two numbers, indicating the seat position (same position as position in the seatReservations array)\n\n\nResponse:\n * 202: If seats reservation went ok.\n * 404: The specifieded run dosn't exist.\n * 428: Seats were occupied before reservating, return the unavailable seats in an array\n * 500: Error at operation.\n \n Operation:\n \n 1. The system will validate if the requested seats are available.\n 2. The system will validate if the Run is on OPEN status.\n 2. The system will update the seatReservations at the specifieded run with the user ID as in JWT\n 2. If the previous is valid, the system will liberate the requested seats.\n \n * In case there is not available seats, the system will return 428 with the list of unavailable seats.\n "
+      description: "Take: an object with arrays of one or two numbers, indicating the seat position (same position as position in the seatReservations array)\n\n\nResponse:\n * 202: If seats reservation went ok.\n * 404: The specifieded run dosn't exist.\n * 428: Seats were occupied before reservating, return the unavailable seats in an array\n * 500: Error at operation.\n \n Operation:\n \n 1. The system will validate if the requested seats are available.\n 2. The system will validate if the Run is on OPEN status.\n 2. The system will update the seatReservations at the specifieded run with the user ID as in JWT\n 2. If the previous is valid, the system will liberate the requested seats.\n \n * In case there is not available seats, the system will return 428 with the list of unavailable seats.\n \n * In case liberateSeats is the only defined then liberate the seat.\n "
       requestBody:
         description: "In the example: \n1. reserve seats that ocupies the 6 and 7 position inside the array.\n2. Liberate the seat at position 6\n3. As result only the seat at position 7 is reserved"
         content:
@@ -479,7 +537,7 @@ paths:
                   description: The amount of reserved seats 1 or 2
                 startStopId:
                   type: integer
-      description: "Create a new reservation for the client.\n\nInternall function:\n\n1. Search for the user reserved seats inside the Run.\n2. Verify the amount of setas reserved equals seats in the request.\n3. Set reservation status as IN_PAYMENT\n4. Generate paymentOrder ans assign to the current reservation.\n5. The folio is made of runID+endStopID+TIMESTAMP_UNIX\n6. Save reservation\n7. Return the reservation\n\n* The userID is provided by the JWT token. "
+      description: "Create a new reservation for the client.\n\nInternall function:\n\n1. Search for the user reserved seats inside the Run.\n1. Validate Run status is OPEN.\n2. Verify the amount of seats reserved equals seats in the request.\n3. Set reservation status as IN_PAYMENT\n4. Generate paymentOrder ans assign to the current reservation.\n5. The folio is made of runID+endStopID+TIMESTAMP_UNIX\n6. Save reservation\n7. Return the reservation\n\n* The userID is provided by the JWT token. "
     parameters: []
     get:
       summary: Get all client reservations
@@ -501,10 +559,11 @@ paths:
             default: CONFIRMED
           in: query
           name: status
-  '/reservations/{ID}':
+  '/reservations/{reservationID}':
     parameters:
-      - type: string
-        name: ID
+      - schema:
+          type: string
+        name: reservationID
         in: path
         required: true
     get:
@@ -534,7 +593,7 @@ paths:
                     $ref: ../common/models/vehicle-model.v1.yaml
                   driverName:
                     type: string
-  '/reservations/{ID}/cancel':
+  '/reservations/{reservationID}/cancel':
     get:
       summary: Cancel a reservation
       tags:
@@ -545,7 +604,13 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
+                $ref: ../common/models/reservation.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
         '500':
           description: Internal Server Error
           content:
@@ -555,11 +620,21 @@ paths:
       requestBody: {}
       security:
         - JWT: []
-      description: ''
+      description: |-
+        Cancel a reservation
+
+        Operation:
+
+        * Validate that the resource exists.
+        * Validate if the reservation belongs to the user.
+        * Validate if the reservation is on CONFIRMED status.
+        * Validate if the reservation is on reimbursement time: reimburse the amount from the paymentOrder as Tiim credits.
+        * Set status as CANCELED_USER.
+        * Return the reservation.
     parameters:
       - schema:
           type: string
-        name: ID
+        name: reservationID
         in: path
         required: true
   /journey/trajectory:
@@ -722,6 +797,250 @@ paths:
       requestBody: {}
       security:
         - JWT: []
+  /payments/cards:
+    post:
+      summary: Associate an open pay card to the client
+      tags:
+        - Card
+        - Payment
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/card.v1.yaml
+      operationId: post-payments-card
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                openPayCard:
+                  type: object
+          application/xml:
+            schema:
+              type: object
+              properties:
+                openPayResponse:
+                  type: object
+        description: ''
+      description: "Associate a tokenized OpenPay card to the client\n\nOperation\n\n  * Passenger app save a new card at OpenPay and get an OpenPay Card object, need to set .\n  * Associte the OpenPay Card with the current user.\n  * Confirm that the OpenPay card exists and belongs to the current user (Use the open_pay_customer_id). \n  * Create a new card Object with the body data.\n  * If there is no previously opeen pay card associated, set the card as favorite."
+    parameters: []
+    get:
+      summary: Get the client list of cards - payment methods
+      operationId: get-payments-cards
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/card.v1.yaml
+      security:
+        - JWT: []
+      description: |-
+        Get the client list of cards
+
+        Operation:
+
+        * Return a list of cards associated to the user.
+        * The User ID is obtaindes by JWT.
+        * The list should never be empty, the client has an initial TiiM credits card created at clients setup.
+  /users/init:
+    post:
+      summary: Start the internal setup configuration for a new user
+      tags:
+        - User
+      responses: {}
+      operationId: post-users-init
+      description: |-
+        Start the internal setup configuration for a new user.
+        It works like a webhook, after a new user is registered in FireBase this endpoint should be invoked with the new user ID (The one from FireBase)
+
+        Operation:
+
+        * Register the user as OpenPay Customer and store it in FireBase customer extended table.
+        * Create a new TiiM credits card for the user.
+        * Others
+    get:
+      summary: ''
+      operationId: get-users-init
+      responses:
+        '200':
+          description: OK
+      description: |-
+        Start the internal setup configuration for a new user.
+        It works like a webhook, after a new user is registered in FireBase this endpoint should be invoked with the new user ID (The one from FireBase)
+
+        Operation:
+
+        * Register the user as OpenPay Customer and store it in FireBase customer extended table.
+        * Create a new TiiM credits card for the user.
+        * Others
+
+        Ref:
+
+        https://firebase.google.com/docs/reference/functions/providers_auth_.userbuilder#on-create
+      security:
+        - JWT: []
+  '/payments/cards/{cardID}':
+    parameters:
+      - type: string
+        name: cardID
+        in: path
+        required: true
+    delete:
+      summary: Delete the specified card
+      tags:
+        - Card
+        - Payment
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/card.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: 'delete-payments-cards-{cardID}'
+      description: |
+        Delete the specified card
+
+        Operation:
+
+        * Validate that the resource exists.
+        * Validate that the card belongs to the user.
+        * Delete the card from OpenPay **
+        * Delete from DB
+      security:
+        - JWT: []
+      requestBody: {}
+  '/payments/cards/{cardId}/favorite':
+    parameters:
+      - type: string
+        name: cardId
+        in: path
+        required: true
+    patch:
+      summary: Set card as favorite
+      tags:
+        - Payment
+        - Card
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/card.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: 'patch-payments-cards-{cardId}-favorite'
+      security:
+        - JWT: []
+      description: |-
+        Set card as favorite
+
+        Operation:
+
+        * Validate that the resource exists.
+        * Validate that the card belongs to the user.
+        * Find the previously favorite card an set to false. (There should always exists a favorite card, otherwise throw an error)
+        * Set the current card as favorite.
+  '/payments/validate-promo-code/{code}':
+    get:
+      summary: Validates if promocode is valid and ready to use
+      tags:
+        - Payment
+        - Promocode
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isValid:
+                    type: boolean
+                required:
+                  - isValid
+      operationId: get-payments-validate-promo-code
+      description: "Validates if promocode is valid and ready to use.\n\nOperation: \n\n* Find the promocode inside the promocode table.\n* If active return true."
+      security:
+        - JWT: []
+    parameters:
+      - schema:
+          type: string
+        name: code
+        in: path
+        required: true
+  'operation-areas/{operationArea}/routes':
+    get:
+      summary: 'Get a list of routes data for the view, filter by operation area'
+      tags:
+        - Route
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  startStop:
+                    $ref: ../common/models/stop.v1.yaml
+                  endStop:
+                    $ref: ../common/models/stop.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-journey-routes
+      description: "Get a list of routes for the view, filter by operation area.\n\nOperation \n\n* Use the operationArea param to filter the routes.\n"
+      security:
+        - JWT: []
+      parameters:
+        - schema:
+            type: string
+          in: query
+    parameters:
+      - schema:
+          type: integer
+        name: operationArea
+        in: path
+        required: true
 components:
   schemas: {}
   securitySchemes:

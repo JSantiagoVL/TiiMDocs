@@ -1,0 +1,34 @@
+title: Card
+type: object
+x-tags:
+  - Card
+  - Payment
+description: ''
+properties:
+  id:
+    type: integer
+  isFavorite:
+    type: boolean
+    description: Set as default or favorite method of payment
+  userId:
+    type: string
+    description: The firebase user id (Same as internall user)
+  rewardBalance:
+    type: number
+    default: 0
+    description: 'TiiM Credits available [Decimal 10,2]'
+  isRewardCard:
+    type: boolean
+    default: false
+    description: is a TiiM credits card
+  expYear:
+    type: integer
+  expMonth:
+    type: integer
+  brand:
+    type: string
+  lastFour:
+    type: string
+  openpayToken:
+    type: string
+    description: The oabtained token that representes the card inside openpay
