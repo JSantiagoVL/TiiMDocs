@@ -170,91 +170,6 @@ paths:
       requestBody: {}
       tags:
         - Stop
-  /journey/calculate:
-    get:
-      summary: Get journey data given two stops
-      tags:
-        - Journey
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  time:
-                    type: string
-                  price:
-                    type: string
-                  stops:
-                    type: array
-                    items:
-                      $ref: ../common/models/stop.v1.yaml
-                  seatsAvailable:
-                    type: number
-                  amenities:
-                    type: array
-                    items:
-                      $ref: ../common/models/amenity.v1.yaml
-      security:
-        - JWT: []
-      requestBody: {}
-      parameters:
-        - schema:
-            type: integer
-          in: query
-          name: runId
-          required: true
-        - schema:
-            type: integer
-          in: query
-          name: endingStop
-          required: true
-      description: Calculate a Journey given a Run and a starting Stop.
-    patch:
-      summary: Get the possible routes given the aboard and descend stops
-      tags:
-        - Journey
-        - Route
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-            application/xml:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    routeId:
-                      type: integer
-                    routeName:
-                      type: string
-                    aboardStop:
-                      $ref: ../common/models/stop.v1.yaml
-                    descendStop:
-                      $ref: ../common/models/stop.v1.yaml
-                    trajectory:
-                      $ref: ../common/models/trajectory.v1.yaml
-      operationId: patch-journey-calculate
-      security:
-        - JWT: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                aboardStopId:
-                  type: integer
-                descendStop:
-                  type: integer
-      description: "Get the possible routes for the view, given the aboard and descend stops\n\nOperation: \n\n* Init coinidences Array as [{startStop: aboardStop, endStop: descnedStop}]\n* Search all stops inside Stops of type ABOARD wich coordinates are the same as the abord stop\n* If the result coincidence > 1 then:\n* Search all stops of type DESCEND wich coordinates are the same as the abord stop \n* If the result coincidence > 1 then:\n* Iterate over the ascending results and find in the desend result an stop that have the same route id. Make a pair from the coincidence and save.\n* End IF\n* End IF\n* For each coincidence:  Get the trajectory data that matchs the pair.\n\n\n\n"
   '/journey/destinations/{originStopID}':
     get:
       summary: Get all possible destinations stops given an origin
@@ -403,8 +318,13 @@ paths:
         name: ID
         in: path
         required: true
-  '':
-    parameters: []
+  '/runs/{runID}/reserve-seats':
+    parameters:
+      - schema:
+          type: string
+        name: runID
+        in: path
+        required: true
     patch:
       summary: Reserve seats and verfy availability
       responses:
@@ -1083,6 +1003,49 @@ paths:
         * For each stop obtain the prev stops in the route, the stops need to be of type ABOARD or BOTH.
 
 
+  /journey/calculate:
+    get:
+      summary: 'Get the possible routes for the view, given the ascend and descend stops.'
+      tags:
+        - Journey
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    routeName:
+                      type: string
+                    ascendStop:
+                      $ref: ../common/models/stop.v1.yaml
+                    descendStop:
+                      $ref: ../common/models/stop.v1.yaml
+                    trajectory:
+                      $ref: ../common/models/trajectory.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-journey-calculate
+      description: "Get the possible routes for the view, given the ascend and descend stops.\n\nOperation: \n\n* Init an Array with [{aboardStop: Stop.findByPk(ascendStopId), descendStop: Stop.findByPk(descendStopId)}]\n* Inside Stops table, search for all stops of type ABOARD which coordinates are the same as the aboardStop.\n* If search result > 1 then:\n* Search all stops of type DESCEND which coordinates are the same as the descendStop.\n* If descend search result > 1 then:\n* Make pairs of {aboardStop, descendStop} that belongs to the same route. (Iterate over the ascending results and find in the descend results the stops that have the same route id)\n* End IF\n* End IF\n* For each coincidence:  Get the route and the trajectory that matchs the stops pair.\n"
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ascendStopId:
+                  type: integer
+                descendStopId:
+                  type: integer
 components:
   schemas: {}
   securitySchemes:
