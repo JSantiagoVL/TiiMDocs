@@ -9,57 +9,6 @@ info:
 servers:
   - url: 'http://localhost:3000'
 paths:
-  /user:
-    post:
-      summary: Register new user
-      tags:
-        - User
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                firebaseUserId:
-                  type: string
-                type:
-                  type: string
-                  enum:
-                    - USER
-                    - DRIVER
-                    - ADMIN
-              required:
-                - firebaseUserId
-                - type
-      responses:
-        '201':
-          description: Created
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: ../common/models/error.v1.yaml
-      security:
-        - JWT: []
-      description: Register in the ser server the new firebase user. If repeated return ok
-  '/user/{userID}':
-    get:
-      summary: Get user data
-      responses:
-        '200':
-          description: OK
-      description: Get the user local data plus Firebase pulic profile data
-      tags:
-        - User
-      security:
-        - JWT: []
-    parameters:
-      - schema:
-          type: string
-        name: userID
-        in: path
-        required: true
   /routes:
     get:
       summary: Get all routes
