@@ -180,9 +180,21 @@ paths:
           name: long
           required: true
         - schema:
-            type: number
+            type: integer
           in: query
-          name: radious
+          name: maxradius
+        - schema:
+            type: integer
+          in: query
+          name: maxresults
+        - schema:
+            type: string
+            enum:
+              - ABOARD
+              - DESCEND
+              - BOTH
+          in: query
+          name: stoptype
       tags:
         - Journey
       description: ''
