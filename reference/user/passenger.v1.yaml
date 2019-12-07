@@ -1007,6 +1007,61 @@ paths:
                   type: integer
                 descendStopId:
                   type: integer
+  /bill-profile:
+    get:
+      summary: Get the users bill profile
+      tags:
+        - Bill
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/invoice-profile.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-bill-profile
+      description: "Get the users bill profile.\n\nResponse:\n * 200: If the user has a bill profile.\n * 404: If the user dosn't have a bill profile.\n \n Operation:\n \n 1. Get the user ID from the JWT data.\n \n 2. Search the record that matches the user ID inside Invoice Profile table.\n \n 3. Get the Bill profile asociated from the GET \"Facturacion\"/perfiles/{idPerfil} and return the full response.\n \nDetails:\n \n * The bill profile core data lives an other DB and API.\n \n "
+      security:
+        - JWT: []
+    post:
+      summary: Create a new profile for the user
+      tags:
+        - Bill
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/invoice-profile.v1.yaml
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: post-bill-profile
+      description: "Create a new profile for the user who made te request.\n\nResponse:\n * 201: Created.\n * 406: Not Acceptable. If the user already has a profile.\n * 500: Error. If the resource couldn't be created.\n \n Operation:\n \n 1. Get the user ID from the JWT data.\n \n 2. Delete iIdPerfilFacturacion field if is set.\n \n 3. Make a request to POST \"Facturacion\"/perfiles/ with the data and get the response.\n \n \n \n \n Details:\n \n * The core data is created by making a request to an external API.\n * A new profile is set to isAutoBillEnable = true by default.\n \n "
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/bill-profile-external.v1.yaml
+    parameters: []
 components:
   schemas: {}
   securitySchemes:

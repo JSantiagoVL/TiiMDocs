@@ -1,0 +1,24 @@
+title: Bill Profile External
+type: object
+x-tags:
+  - Bill
+description: "Perfil de facturacion. \nEn una primer version el cliente solo puede tener un perfil de facturacion. Nombres en español para compatibiliad con api externa"
+properties:
+  iIdPerfilFacturacion:
+    type: integer
+  iTipoRegimen:
+    type: integer
+  sCorreoElectronico:
+    type: string
+  SRazonSocial:
+    type: string
+  sRFC:
+    type: string
+  sUsoCfdi:
+    type: string
+required:
+  - iTipoRegimen
+  - sCorreoElectronico
+  - SRazonSocial
+  - sRFC
+  - sUsoCfdi

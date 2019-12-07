@@ -2,32 +2,18 @@ title: Invoice Profile
 type: object
 x-tags:
   - Invoice
-description: "Perfil de facturacion. \nEn una primer version el cliente solo puede tener un perfil de facturacion. Nombres en español para compatibiliad con api externa"
+description: |-
+  Internal representation of the user bill profile.
+  The extra data is useful only for the TiiM system
 properties:
   id:
     type: integer
-  clientId:
-    type: integer
-  sRfc:
-    type: string
-  sRazonSocial:
-    type: string
-  iTipoRegimen:
-    type: integer
-    description: '1: persona moral, 2: persona fisica'
-  sCorreoElectronico:
-    type: string
-  sUsoCfdi:
-    type: string
-    default: E48
-    description: I01
-  iFacturacionAuto:
-    type: integer
     description: '(1 | 0) Es perfil por default. Siempre = 1'
+  billProfile:
+    $ref: ./bill-profile-external.v1.yaml
+  isAutoBillEnabled:
+    type: boolean
 required:
   - id
-  - clientId
-  - sRfc
-  - sRazonSocial
-  - iTipoRegimen
-  - sCorreoElectronico
+  - billProfile
+  - isAutoBillEnabled
