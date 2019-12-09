@@ -710,7 +710,7 @@ paths:
                 openPayResponse:
                   type: object
         description: ''
-      description: "Associate a tokenized OpenPay card to the client\n\nOperation\n\n  * Passenger app save a new card at OpenPay and get an OpenPay Card object, need to set .\n  * Associte the OpenPay Card with the current user.\n  * Confirm that the OpenPay card exists and belongs to the current user (Use the open_pay_customer_id). \n  * Create a new card Object with the body data.\n  * If there is no previously opeen pay card associated, set the card as favorite."
+      description: "Associate a tokenized OpenPay card to the client\n\nOperation\n\n  * Passenger app save a new card at OpenPay and get an OpenPay Card object.\n  * Associte the OpenPay Card with the current user.\n  * Confirm that the OpenPay card exists and belongs to the current user (Use the open_pay_customer_id). \n  * Create a new card Object with the body data.\n  * If there is no previously opeen pay card associated, set the card as favorite."
     parameters: []
     get:
       summary: Get the client list of cards - payment methods
@@ -732,7 +732,7 @@ paths:
         Operation:
 
         * Return a list of cards associated to the user.
-        * The User ID is obtaindes by JWT.
+        * The User ID is obtained by JWT.
         * The list should never be empty, the client has an initial TiiM credits card created at clients setup.
   /users/init:
     post:
@@ -1062,6 +1062,52 @@ paths:
             schema:
               $ref: ../common/models/bill-profile-external.v1.yaml
     parameters: []
+  /operation-areas/inside-area:
+    get:
+      summary: Return the operation area given coordinates.
+      tags:
+        - OperationArea
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/operation-area.v1.yaml
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-operation-areas-inside-area
+      description: "Return the operation area given a coordinates point.\n\nResponses: \n\n* 200 OK: Operation area found.\n* 204 No Content: No operation area found.\n* 500 ERROR: If something went wrong.\n\nOperation:\n\n* Find in the list of stops using haversine service. Filter the request by maxRadious of 50km.\n* From the first element in the response, get the route, from the route get the operation area.\n* If no response return empty object and with a 204 response code."
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+      parameters:
+        - schema:
+            type: number
+          in: query
+          name: lat
+          required: true
+        - schema:
+            type: number
+          in: query
+          name: long
+          required: true
 components:
   schemas: {}
   securitySchemes:
