@@ -537,20 +537,22 @@ paths:
             application/json:
               schema:
                 $ref: ../common/models/error.v1.yaml
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                originStopId:
-                  type: integer
-                destinationStopId:
-                  type: integer
+      requestBody: {}
       description: |-
         Get the time and price of a trajectory given a starting stop and a final stop from the same route.
         The returning element is an on object.
         In case of unexistent stop or if the stops don't belong to the same route and an error will be returned.
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: originStopId
+          required: true
+        - schema:
+            type: integer
+          in: query
+          name: destinationStopId
+          required: true
   /operation-areas/:
     get:
       summary: Get the list of all operation areas
