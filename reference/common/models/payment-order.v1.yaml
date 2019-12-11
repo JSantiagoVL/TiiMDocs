@@ -1,0 +1,44 @@
+title: Payment Order
+type: object
+x-tags:
+  - Payment
+properties:
+  id:
+    type: integer
+  client:
+    type: string
+  status:
+    type: string
+    enum:
+      - PAYED
+      - CANCELED
+      - REIMBURSED
+      - AWAITING_PAYMENT
+  purchases:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        unitPrice:
+          type: number
+        units:
+          type: integer
+  modifiers:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        operation:
+          type: string
+        operator:
+          type: number
+  totalAmount:
+    type: string
+  expiration:
+    type: string
+  lastPaymentIntentId:
+    type: integer

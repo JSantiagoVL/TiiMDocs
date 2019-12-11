@@ -463,18 +463,57 @@ paths:
               schema:
                 type: object
                 properties:
-                  reservation:
-                    $ref: ../common/models/reservation.v1.yaml
                   departureDate:
                     type: string
-                  paymentAmount:
-                    type: number
+                  aboardCode:
+                    type: string
+                  seats:
+                    type: array
+                    items:
+                      type: integer
                   routeName:
                     type: string
-                  vehicle:
-                    $ref: ../common/models/vehicle-model.v1.yaml
                   driverName:
                     type: string
+                  aboardStop:
+                    $ref: ../common/models/stop.v1.yaml
+                  descendStop:
+                    $ref: ../common/models/stop.v1.yaml
+                  vehicleModel:
+                    type: string
+                  bus:
+                    $ref: ../common/models/bus.v1.yaml
+                  paymentOrder:
+                    $ref: ../common/models/payment-order.v1.yaml
+                  reservation:
+                    $ref: ../common/models/reservation.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: ''
+      description: |-
+        Get the detailed reservation data as required for the realted screens.
+
+        Responses:
+
+        200. Ok: Reservation data found.
+        404. Not found: The reservation resource couldn't be found.
+        500. Internal Server Error: Error
+
+        Operation:
+
+        1. Find the reservation data and get the 1st realted objects.
+
+        Notes: NA
   '/reservations/{reservationID}/cancel':
     get:
       summary: Cancel a reservation
@@ -1110,6 +1149,59 @@ paths:
           in: query
           name: long
           required: true
+  '/reservations/{reservationID}/rate':
+    parameters:
+      - type: string
+        name: reservationID
+        in: path
+        required: true
+    patch:
+      summary: Rate an ended reservation
+      tags:
+        - Reservation
+        - Rate
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/rate.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: 'patch-reservations-{reservationID}-rate'
+      description: "User rate the related service.\n\nResponses: \n\n* 202: Accepted. If rating the service was accepted.\n* 404: Not Found. If the reservation resource coudn't be found.\n* 406: Not Acceptable. If the user tries to rate an already rated reservation or the reservation has a different status than ENDED.\n* 500: Internal Server Error. If something went wrong.\n\nOperation:\n\n1. Find the reservation and validate that it belongs to the user.\n2. Validate that the reservation it's on ENDED status.\n3. Validate that the user don't have an entry for the reservation inside Rate table.\n4. If all is valid, create a new Rate realted to the user and to the reservation.\n\nNotes:\n\n* The user can rate a reservation only once and the reservation must be on ENDED status in order to be rated.\n* The rate value is a range between 0 and 5."
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rate:
+                  type: integer
+                  minimum: 0
+                  maximum: 5
+                  description: integer from 0 to 5
+              required:
+                - rate
 components:
   schemas: {}
   securitySchemes:

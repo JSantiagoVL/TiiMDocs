@@ -1,0 +1,26 @@
+title: Rate
+type: object
+x-tags:
+  - Rate
+properties:
+  id:
+    type: integer
+  reservationId:
+    type: integer
+    description: The user reservation.
+  rate:
+    type: integer
+    minimum: 0
+    maximum: 5
+    description: '[0-5]'
+  createdAt:
+    type: string
+    description: 'YYYY-MM-DD HH:MM:SS'
+description: |-
+  The users rate the given service.
+
+  Notes:
+
+  * The related user is accesible through the reservation relation.
+
+  * A multiple analysis colud be perfomed through the data realted to reservarion, like driver, route, bus unit, etc.
