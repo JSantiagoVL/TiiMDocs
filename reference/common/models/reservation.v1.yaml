@@ -32,9 +32,9 @@ properties:
     type: string
     format: date
     description: 'YYYY-MM-DD HH:MM:SS'
-  clientId:
-    type: integer
-  folio:
+  userId:
+    type: string
+  aboardCode:
     type: string
   startStopId:
     type: integer

@@ -13,6 +13,8 @@ properties:
     $ref: ./bill-profile-external.v1.yaml
   isAutoBillEnabled:
     type: boolean
+  userId:
+    type: string
 required:
   - id
   - billProfile

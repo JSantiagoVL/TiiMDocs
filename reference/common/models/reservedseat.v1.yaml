@@ -1,0 +1,15 @@
+title: ReservedSeat
+type: object
+x-tags:
+  - Reservation
+properties:
+  id:
+    type: integer
+  runId:
+    type: integer
+  userId:
+    type: string
+  seatPosition:
+    type: integer
+  isConfirmed:
+    type: boolean

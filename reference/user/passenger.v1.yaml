@@ -657,7 +657,7 @@ paths:
         in: path
         required: true
     get:
-      summary: 'Get the list of seats '
+      summary: Get the list of seats
       tags:
         - Run
         - Reservation
@@ -674,11 +674,11 @@ paths:
                     type: array
                     items:
                       type: string
-                  seatCols:
+                  seatRows:
                     type: integer
                 required:
                   - seatsReservations
-                  - seatCols
+                  - seatRows
               examples:
                 example:
                   value:
@@ -1103,6 +1103,50 @@ paths:
             schema:
               $ref: ../common/models/bill-profile-external.v1.yaml
     parameters: []
+    patch:
+      summary: Update bill profile
+      tags:
+        - Bill
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/invoice-profile.v1.yaml
+        '406':
+          description: Not Acceptable
+        '500':
+          description: Internal Server Error
+      operationId: patch-bill-profile
+      description: |-
+        Update bill profile
+
+        Responses:
+
+        202. Accepted: Profile succesfully changed.
+        406. Not acceptable: The user dosn't have a profile or the body isn't right.
+        500. Error: Unexpected error.
+
+        Operation:
+
+         1. Get the users id.
+         2. Find if is there a bill profile acciated to the user id.
+         3. Delete from body if it is set: iIdPerfilFacturacion.
+         4. Re send the data to the externall endpoint.
+         5. Validate the success response.
+         6. Return the bill profile object wraped by the invoice profile object.
+
+        Notes:
+
+        * Requires a call to an externall API.
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/bill-profile-external.v1.yaml
   /operation-areas/inside-area:
     get:
       summary: Return the operation area given coordinates.
@@ -1202,6 +1246,13 @@ paths:
                   description: integer from 0 to 5
               required:
                 - rate
+  /bill-profile/update-auto-bill:
+    patch:
+      summary: Update auto billing status
+      tags:
+        - Bill
+      responses: {}
+      operationId: patch-bill-profile-update-auto-bill
 components:
   schemas: {}
   securitySchemes:
