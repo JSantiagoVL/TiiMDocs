@@ -1,0 +1,23 @@
+title: Transaction
+type: object
+x-tags:
+  - Payment
+  - Transaction
+description: The response from OpenPay when a transaction occurs
+properties:
+  id:
+    type: integer
+  openPayTransactionId:
+    type: string
+  authorization:
+    type: string
+  openPayCardId:
+    type: string
+  amount:
+    type: number
+  status:
+    type: string
+  orderId:
+    type: integer
+  operationDate:
+    type: string

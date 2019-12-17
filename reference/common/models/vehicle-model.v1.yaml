@@ -26,3 +26,6 @@ properties:
   rows:
     type: integer
     description: 'Indicates the cols inside seat mask, also indicates the chunck to create the nxm matrix'
+  seatNumeration:
+    type: string
+    description: '"1,x,4,7,10,x,x,x,x,11,x,2,5,8,12,x,3,6,9,13"'
