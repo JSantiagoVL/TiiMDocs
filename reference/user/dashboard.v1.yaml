@@ -243,6 +243,585 @@ paths:
           description: Accepted
       security:
         - jwt: []
+  /vehicle:
+    get:
+      summary: Get the list of all vehicles models
+      tags:
+        - Vehicle
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/vehicle-model.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+      operationId: get-vehicle
+      security:
+        - jwt: []
+      description: |-
+        Get the list of all vehicles models
+
+        RESPONSES:
+         * 200 OK. Return the list of all vehicles
+         * 500 ERROR. Something went wrong
+
+        OPERATION:
+
+        1. Retrive all the vehicles from the list
+
+        NOTES:
+
+        NA
+    post:
+      summary: Create a new vehicle
+      tags:
+        - Vehicle
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/vehicle-model.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: post-vehicle
+      description: "Insert a new vehicle in DB\n\nRESPONSES:\n * 201 CREATED. Return the created vehicle model.\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Insert the new vehicle entity.\n2. Asociate the selected amenities to the new vehicle.\n3. Return the vehicle object.\n\nNOTES:\n\n * The ammenities need to be craeted first in order to select and asociate. \n * The models are global, independent from the operation area."
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/vehicle-model.v1.yaml
+  '/vehicle/{vehicleID}':
+    parameters:
+      - type: string
+        name: vehicleID
+        in: path
+        required: true
+    patch:
+      summary: Update vehicle model data
+      tags:
+        - Vehicle
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/vehicle-model.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: 'patch-vehicle-{vehicleID}'
+      description: |-
+        Update vehicle model data
+
+        RESPONSES:
+         * 202 Accepted. Return the updated vehicle model.
+         * 404 Not Found. The referenced object coudn't be found.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the vehicle model by pk.
+        2. Clear the id field from body data, if any.
+        3. Validate that all the fields from the body belongs to the model.
+        4. Update the values and save.
+
+        NOTES:
+
+        !! Edit the seatsMask or seatNumeration fileds could cause unexpected errors on reservations and runs.
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/vehicle-model.v1.yaml
+  /buses:
+    post:
+      summary: Create a new bus
+      tags:
+        - Bus
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/bus.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: post-buses
+      description: |-
+        Create a new bus
+
+        RESPONSES:
+         * 201 Created. Return the created bus.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Get the current operation area from the user data.
+        2. Validate if the bus operationarea is the same as the user who made the request. If the user is superadmin, don't make the prev validation.
+        3. Save the bus.
+        4. Return the created object.
+
+        NOTES:
+
+        * The operation area validation could be ignored for now. Use the one from the body request.
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/bus.v1.yaml
+    get:
+      summary: Get the list of buses
+      tags:
+        - Bus
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/bus.v1.yaml
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+              examples:
+                example-1:
+                  value: []
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-buses
+      description: |-
+        Get the list of buses
+
+        RESPONSES:
+         * 200 OK. Return the list of buses.
+         * 204 No content. If the query returns empty.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Fin all buses
+        2. If the operationArea param is set filter by area.
+        3. Return the list of buses. If empty return 204 and an empty array.
+
+        NOTES:
+
+        NA
+      security:
+        - jwt: []
+      requestBody:
+        description: ''
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: operationArea
+          description: Filter by operation area
+  '/buses/{busID}':
+    parameters:
+      - type: string
+        name: busID
+        in: path
+        required: true
+        schema:
+          type: integer
+    patch:
+      summary: Upadte the bus data
+      tags:
+        - Bus
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/bus.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: 'patch-buses-{busID}'
+      description: |-
+        Upadte the bus data
+
+        RESPONSES:
+         * 202 Accepted. Return the updated bus.
+         * 404 Not found. Resource not found
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the bus by pk. If not found return 404.
+        2. Clear the id field and operationArea from body data, if any.
+        3. Validate that all the fields from the body belongs to the model.
+        4. Update the values and save.
+        5. Return the upadted model.
+
+        NOTES:
+
+        NA
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/bus.v1.yaml
+        description: Any value from the object is suficcient. Except id.
+    delete:
+      summary: Delete the bus and cancel the asociated resv
+      tags:
+        - Bus
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: DELETED
+      operationId: 'delete-buses-{busID}'
+      description: |-
+        Delete the bus and cancel all the asociated reservations.
+
+        RESPONSES:
+         * 202 Accepted. Successfully deleted bus.
+         * 404 Not found. Resource not found
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        * SuperAdmin only
+        1. Find the bus by pk. If not found return 404.
+        2. Find all the runs asociated to the bus.
+        3. Find all the reservations asociated to previous runs.
+        4. Cancel all the previous reservations.
+        5. Delete the bus.
+        6. Return { "response": "DELETED" }.
+
+
+        NOTES:
+
+        * This action is a super admin only
+      security:
+        - jwt: []
+    get:
+      summary: Get the specific bus
+      operationId: 'get-buses-{busID}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/bus.v1.yaml
+      description: |-
+        Get the specific bus.
+
+        RESPONSES:
+         * 200 Ok. Return the bus.
+         * 404 Not found. Resource not found
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the bus by pk. If not found return 404.
+        5. Return the bus.
+
+        NOTES:
+
+        NA
+      security:
+        - jwt: []
+  /drivers:
+    get:
+      summary: Get a list of drivers
+      tags:
+        - Drivers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/driver.v1.yaml
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+              examples:
+                example:
+                  value: []
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/driver.v1.yaml
+      operationId: get-drivers
+      description: |-
+        Get a list of drivers
+
+        RESPONSES:
+         * 200 OK. Return the list of drivers.
+         * 204 No content. If the query returns empty.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Fin all drivers
+        2. If the operationArea param is set filter by area.
+        3. Return the list of drivers. If empty return 204 and an empty array.
+
+        NOTES:
+
+        NA
+      security:
+        - jwt: []
+      requestBody: {}
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: operationAreaId
+    post:
+      summary: Create a driver
+      tags:
+        - Drivers
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/driver.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: post-drivers
+      description: |
+        Create a driver
+
+        RESPONSES:
+         * 201 Created. Return the created driver.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Get the current operation area from the user data.
+        2. Validate if the driver operation area is the same as the user who made the request. If the user is superadmin, don't make the prev validation.
+        3. Create the user inisde Firebase.
+        5. Add the user type in the extended table of the user. tipo : CONDUCTOR.
+        6. Return the created object.
+
+        NOTES:
+
+        * The operation area validation could be ignored for now. Use the one from the body request.
+        * The firebase user is the same for userId inside the sql db.
+      security:
+        - jwt: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/driver.v1.yaml
+  '/driver/{driverID}':
+    parameters:
+      - type: string
+        name: driverID
+        in: path
+        required: true
+    patch:
+      summary: Update the driver data
+      tags: []
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/driver.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: 'patch-driver-{driverID}'
+      description: |-
+        Update the driver data
+
+        RESPONSES:
+         * 202 Accepted. Return the updated driver.
+         * 404 Not found. Resource not found
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the driver by pk. If not found return 404.
+        2. Clear the id field and operationArea from body data, if any.
+        3. Validate that all the fields from the body belongs to the model.
+        4. Update the values and save.
+        5. Return the updated model.
+
+        NOTES:
+
+        NA
+      security:
+        - jwt: []
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: operationAreaId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/driver.v1.yaml
+        description: Any value from the object is suficcient. Except id.
+    delete:
+      summary: Delte a driver
+      tags: []
+      responses: {}
+      operationId: 'delete-driver-{driverID}'
+      description: |-
+        Delte a driver
+
+        RESPONSES:
+         * 202 Accepted. Successfully deleted driver.
+         * 404 Not found. Resource not found
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        * SuperAdmin only
+        1. Find the bus by pk. If not found return 404.
+        2. Find all the runs asociated to the bus.
+        3. Find all the reservations asociated to previous runs.
+        4. Cancel all the previous reservations.
+        5. Delete the bus.
+        6. Return { "response": "DELETED" }.
+
+
+        NOTES:
+
+        * This action is a super admin only
+    get:
+      summary: Get the specific driver.
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/driver.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: 'get-driver-{driverID}'
+      description: |-
+        Get the specific driver.
+
+        RESPONSES:
+         * 200 Ok. Return the driver.
+         * 404 Not found. Resource not found
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the driver by pk. If not found return 404.
+        5. Return the driver.
+
+        NOTES:
+
+        NA
+      security:
+        - jwt: []
+      requestBody: {}
 components:
   schemas: {}
   securitySchemes:

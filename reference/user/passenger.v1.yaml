@@ -419,7 +419,7 @@ paths:
                   description: The amount of reserved seats 1 or 2
                 startStopId:
                   type: integer
-      description: "Create a new reservation for the client.\n\nInternall function:\n\n1. Search for the user reserved seats inside the Run.\n1. Validate Run status is OPEN.\n2. Verify the amount of seats reserved equals seats in the request.\n3. Set reservation status as IN_PAYMENT\n4. Generate paymentOrder ans assign to the current reservation.\n5. The folio is made of runID+endStopID+TIMESTAMP_UNIX\n6. Save reservation\n7. Return the reservation\n\n* The userID is provided by the JWT token. "
+      description: "Create a new reservation for the client.\n\nInternall function:\n\n1. Search for the user reserved seats inside the Run.\n1. Validate Run status is OPEN.\n2. Verify the amount of seats reserved equals seats in the request.\n3. Set reservation status as IN_PAYMENT\n4. Generate paymentOrder ans assign to the current reservation.\n5. The folio is made of runID+endStopID+TIMESTAMP_UNIX\n1. Set seats to be as the specified by the vehicle seatsNumeration.\n6. Save reservation.\n7. Return the reservation\n\n* The userID is provided by the JWT token. "
     parameters: []
     get:
       summary: Get all client reservations
@@ -608,35 +608,6 @@ paths:
       security:
         - JWT: []
     parameters: []
-  /operation-areas/inside-area/:
-    get:
-      parameters:
-        - schema:
-            type: number
-          in: query
-          name: lat
-          required: true
-        - schema:
-            type: number
-          in: query
-          name: long
-          required: true
-      summary: Get the area where the coordinates belong
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: ../common/models/operation-area.v1.yaml
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-      description: ''
-    parameters: []
   '/operation-areas/{areaID}':
     parameters:
       - type: string
@@ -650,6 +621,8 @@ paths:
       tags:
         - OperationArea
       responses: {}
+      security:
+        - JWT: []
   '/runs/{runID}/seats':
     parameters:
       - type: string
@@ -829,7 +802,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: ../common/models/card.v1.yaml
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: DELETED
+                required:
+                  - response
         '404':
           description: Not Found
           content:

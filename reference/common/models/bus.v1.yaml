@@ -8,8 +8,6 @@ properties:
     type: string
   serial:
     type: string
-  color:
-    type: string
   imageUrl:
     type: string
   status:
@@ -30,11 +28,12 @@ properties:
     type: string
     format: date-time
     description: 'YYYY-MM-DD HH:MM:SS'
+  operationAreaId:
+    type: integer
 required:
   - id
   - ' license'
   - serial
-  - color
   - status
   - modelId
   - lat

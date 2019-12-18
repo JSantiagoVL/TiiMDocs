@@ -19,7 +19,7 @@ properties:
     type: integer
   telefono:
     type: string
-  userID:
+  userId:
     type: string
 required:
   - id
