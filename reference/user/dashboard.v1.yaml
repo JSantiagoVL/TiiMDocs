@@ -365,6 +365,44 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/vehicle-model.v1.yaml
+    get:
+      summary: Get the specific vehicle
+      operationId: 'get-vehicle-{vehicleID}'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/vehicle-model.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      description: |-
+        Get the specific vehicle
+
+        RESPONSES:
+         * 200 OK. Return the list of buses.
+         * 204 No content. If the query returns empty.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find vehicle by pk
+        2. Return the vehicle model
+
+        NOTES:
+
+        NA
   /buses:
     post:
       summary: Create a new bus
@@ -769,11 +807,11 @@ paths:
         OPERATION:
 
         * SuperAdmin only
-        1. Find the bus by pk. If not found return 404.
-        2. Find all the runs asociated to the bus.
+        1. Find the driver by pk. If not found return 404.
+        2. Find all the runs asociated to the driver.
         3. Find all the reservations asociated to previous runs.
         4. Cancel all the previous reservations.
-        5. Delete the bus.
+        5. Delete the driver.
         6. Return { "response": "DELETED" }.
 
 

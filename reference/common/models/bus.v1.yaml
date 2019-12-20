@@ -17,7 +17,7 @@ properties:
       - UNACTIVE
   year:
     type: string
-  modelId:
+  vehicleModelId:
     type: integer
     description: The model is an entity. There are defined the amenities and other comon features.
   lat:
@@ -35,6 +35,6 @@ required:
   - ' license'
   - serial
   - status
-  - modelId
+  - vehicleModelId
   - lat
   - long
