@@ -7,7 +7,10 @@ info:
     email: jsantiagovl@hotmail.com
   description: TiiM User API for Android and iOS apps
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'http://localhost:3000/api/v1/passenger'
+    description: Localhost
+  - description: Produccion
+    url: 'http://api.gotiim.com/api/v1/passenger'
 paths:
   /routes:
     get:

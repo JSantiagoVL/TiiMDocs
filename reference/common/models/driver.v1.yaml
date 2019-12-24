@@ -17,7 +17,7 @@ properties:
       - DEACTIVATED
   defaultVehicleId:
     type: integer
-  telefono:
+  phone:
     type: string
   userId:
     type: string

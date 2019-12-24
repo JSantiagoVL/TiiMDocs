@@ -3,7 +3,10 @@ info:
   title: Dashboard
   version: '1.0'
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'http://localhost:3000/api/v1/dashboard'
+    description: Localhost
+  - url: 'http://api.gotiim.com/api/v1/dashboard'
+    description: Production
 paths:
   /operation-areas:
     post:
@@ -16,6 +19,7 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/operation-area.v1.yaml
+      description: ''
     get:
       summary: Get list of all operation areas
       tags:
@@ -29,16 +33,17 @@ paths:
                 type: array
                 items:
                   $ref: ../common/models/operation-area.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
       requestBody:
-        content:
-          application/xml:
-            schema:
-              type: object
-              properties: {}
         description: ''
       security:
-        - jwt: []
-      description: ''
+        - JWT: []
+      description: "Get list of all operation areas\n\nResponses:\n200. OK: \n500. ERROR: \n\nOperation:\n\n1. Get and return all the operation areas.\n\nNotes:\n"
     parameters: []
   '/operation-areas/{areaId}':
     parameters:
@@ -58,7 +63,7 @@ paths:
               schema:
                 $ref: ../common/models/operation-area.v1.yaml
       security:
-        - jwt: []
+        - JWT: []
     patch:
       summary: ''
       responses:
@@ -69,7 +74,7 @@ paths:
               schema:
                 $ref: ../common/models/operation-area.v1.yaml
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         content:
           application/json:
@@ -96,7 +101,7 @@ paths:
                 items:
                   $ref: ../common/models/routes.v1.yaml
       security:
-        - jwt: []
+        - JWT: []
     post:
       summary: Add a route to the operation area
       tags:
@@ -104,13 +109,13 @@ paths:
         - Route
       responses: {}
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         content:
           application/json:
             schema:
               $ref: ../common/models/routes.v1.yaml
-  '/route/{routeId}':
+  '/routes/{routeId}':
     parameters:
       - type: string
         name: routeId
@@ -128,7 +133,7 @@ paths:
               schema:
                 $ref: ../common/models/routes.v1.yaml
       security:
-        - jwt: []
+        - JWT: []
     delete:
       summary: Delete specific route
       tags:
@@ -138,7 +143,7 @@ paths:
           description: Accepted
       requestBody: {}
       security:
-        - jwt: []
+        - JWT: []
     patch:
       summary: ''
       responses:
@@ -149,13 +154,13 @@ paths:
               schema:
                 $ref: ../common/models/routes.v1.yaml
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         content:
           application/json:
             schema:
               $ref: ../common/models/routes.v1.yaml
-  '/route/{routeId}/stops/':
+  '/routes/{routeId}/stops/':
     parameters:
       - type: string
         name: routeId
@@ -176,7 +181,7 @@ paths:
                 items:
                   $ref: ../common/models/stop.v1.yaml
       security:
-        - jwt: []
+        - JWT: []
     post:
       summary: Create and add a new stop in the route
       tags:
@@ -190,13 +195,13 @@ paths:
               schema:
                 $ref: ../common/models/stop.v1.yaml
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         content:
           application/json:
             schema:
               $ref: ../common/models/stop.v1.yaml
-  '/stop/{stopId}':
+  '/stops/{stopId}':
     parameters:
       - type: string
         name: stopId
@@ -214,7 +219,7 @@ paths:
               schema:
                 $ref: ../common/models/stop.v1.yaml
       security:
-        - jwt: []
+        - JWT: []
       requestBody: {}
     patch:
       summary: Update the specific stop
@@ -228,7 +233,7 @@ paths:
               schema:
                 $ref: ../common/models/stop.v1.yaml
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         content:
           application/json:
@@ -242,8 +247,8 @@ paths:
         '202':
           description: Accepted
       security:
-        - jwt: []
-  /vehicle:
+        - JWT: []
+  /vehicles:
     get:
       summary: Get the list of all vehicles models
       tags:
@@ -269,21 +274,8 @@ paths:
                 properties: {}
       operationId: get-vehicle
       security:
-        - jwt: []
-      description: |-
-        Get the list of all vehicles models
-
-        RESPONSES:
-         * 200 OK. Return the list of all vehicles
-         * 500 ERROR. Something went wrong
-
-        OPERATION:
-
-        1. Retrive all the vehicles from the list
-
-        NOTES:
-
-        NA
+        - JWT: []
+      description: "Get the list of all vehicles models\n\nRESPONSES:\n * 200 OK. Return the list of all vehicles\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the vehicles from the list\n\nNOTES: \n\nNA"
     post:
       summary: Create a new vehicle
       tags:
@@ -304,13 +296,14 @@ paths:
       operationId: post-vehicle
       description: "Insert a new vehicle in DB\n\nRESPONSES:\n * 201 CREATED. Return the created vehicle model.\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Insert the new vehicle entity.\n2. Asociate the selected amenities to the new vehicle.\n3. Return the vehicle object.\n\nNOTES:\n\n * The ammenities need to be craeted first in order to select and asociate. \n * The models are global, independent from the operation area."
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         content:
           application/json:
             schema:
               $ref: ../common/models/vehicle-model.v1.yaml
-  '/vehicle/{vehicleID}':
+    parameters: []
+  '/vehicles/{vehicleID}':
     parameters:
       - type: string
         name: vehicleID
@@ -359,7 +352,7 @@ paths:
 
         !! Edit the seatsMask or seatNumeration fileds could cause unexpected errors on reservations and runs.
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         content:
           application/json:
@@ -440,7 +433,7 @@ paths:
 
         * The operation area validation could be ignored for now. Use the one from the body request.
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         content:
           application/json:
@@ -494,14 +487,14 @@ paths:
 
         NA
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         description: ''
       parameters:
         - schema:
             type: integer
           in: query
-          name: operationArea
+          name: operationAreaId
           description: Filter by operation area
   '/buses/{busID}':
     parameters:
@@ -555,7 +548,7 @@ paths:
 
         NA
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         content:
           application/json:
@@ -601,7 +594,7 @@ paths:
 
         * This action is a super admin only
       security:
-        - jwt: []
+        - JWT: []
     get:
       summary: Get the specific bus
       operationId: 'get-buses-{busID}'
@@ -629,7 +622,7 @@ paths:
 
         NA
       security:
-        - jwt: []
+        - JWT: []
   /drivers:
     get:
       summary: Get a list of drivers
@@ -679,7 +672,7 @@ paths:
 
         NA
       security:
-        - jwt: []
+        - JWT: []
       requestBody: {}
       parameters:
         - schema:
@@ -724,13 +717,13 @@ paths:
         * The operation area validation could be ignored for now. Use the one from the body request.
         * The firebase user is the same for userId inside the sql db.
       security:
-        - jwt: []
+        - JWT: []
       requestBody:
         content:
           application/json:
             schema:
               $ref: ../common/models/driver.v1.yaml
-  '/driver/{driverID}':
+  '/drivers/{driverID}':
     parameters:
       - type: string
         name: driverID
@@ -779,7 +772,7 @@ paths:
 
         NA
       security:
-        - jwt: []
+        - JWT: []
       parameters:
         - schema:
             type: integer
@@ -858,12 +851,12 @@ paths:
 
         NA
       security:
-        - jwt: []
+        - JWT: []
       requestBody: {}
 components:
   schemas: {}
   securitySchemes:
-    jwt:
-      name: API Key
+    JWT:
+      name: Bearer
       type: apiKey
       in: header
