@@ -1,7 +1,11 @@
 title: Route
 type: object
 x-examples: {}
-description: 'The route is composed of multiple stops. One route, as defined in the system, can be traveled in only one way. Therefore the inverse route is a different route.'
+description: |-
+  The route model is an entity that belongs to one Operation Area.
+  The route consist, at its core, of a name and active status.
+  The route has multiple stops and multiple trajectories.
+  One route, as defined in the system, can be traveled in only one way. Therefore the inverse route is a different route.
 properties:
   id:
     type: integer
@@ -13,21 +17,21 @@ properties:
   status:
     type: string
     enum:
-      - ACTIVATED
-      - DEACTIVATED
+      - ACTIVE
+      - INACTIVE
   stops:
     type: array
     items:
       $ref: ./stop.v1.yaml
-  price:
-    type: number
-    description: The route price is the obtained from the full trajectory
   operationAreaId:
     type: integer
+  trajectories:
+    type: array
+    items:
+      $ref: ./trajectory.v1.yaml
 required:
   - id
   - name
   - mapResource
   - status
-  - stops
   - operationAreaId

@@ -13,13 +13,41 @@ paths:
       summary: Create a new operation area
       tags:
         - OperationArea
-      responses: {}
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/operation-area.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
       requestBody:
         content:
           application/json:
             schema:
               $ref: ../common/models/operation-area.v1.yaml
-      description: ''
+      description: |
+        Create a new operation area
+
+        Responses:
+         * 201 Created. Return the created driver.
+         * 500 ERROR. Something went wrong.
+
+        Operation:
+
+          1. Clear the id from the request body if any.
+          2. Validate that the new area is unique.
+          3. Insert to DB.
+          4. Return the created object.
+
+        Notes: NA
+      security:
+        - JWT: []
     get:
       summary: Get list of all operation areas
       tags:
@@ -43,7 +71,7 @@ paths:
         description: ''
       security:
         - JWT: []
-      description: "Get list of all operation areas\n\nResponses:\n200. OK: \n500. ERROR: \n\nOperation:\n\n1. Get and return all the operation areas.\n\nNotes:\n"
+      description: "Get list of all operation areas\n\nResponses:\n  * 200 OK.\n  * 500 ERROR. \n\nOperation:\n\n  1. Get and return all the operation areas.\n\nNotes: \n\n* NA\n"
     parameters: []
   '/operation-areas/{areaId}':
     parameters:
@@ -64,8 +92,9 @@ paths:
                 $ref: ../common/models/operation-area.v1.yaml
       security:
         - JWT: []
+      description: "Get a specific operation area\n\nResponses:\n * 200 OK. Return the list of buses.\n * 404 Not Found. The requested ID dosn't exists.\n * 500 ERROR. Something went wrong.\n\nOperation:\n\n  1. Try to get the requested ID from operation areas. If not coincidendes, response 404.\n  2. Return the requested data\n\nNotes: \n\n* NA"
     patch:
-      summary: ''
+      summary: Update operation area data
       responses:
         '202':
           description: Accepted
@@ -80,41 +109,25 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/operation-area.v1.yaml
-  '/operation-areas/{areaId}/routes':
-    parameters:
-      - type: string
-        name: areaId
-        in: path
-        required: true
-    get:
-      summary: Get operation area routes
-      tags:
-        - OperationArea
-        - Route
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: ../common/models/routes.v1.yaml
-      security:
-        - JWT: []
-    post:
-      summary: Add a route to the operation area
-      tags:
-        - OperationArea
-        - Route
-      responses: {}
-      security:
-        - JWT: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: ../common/models/routes.v1.yaml
+      description: |-
+        Update the operation area data
+
+        RESPONSES:
+         * 202 Accepted. Return the modifieded operation area
+         * 404 Not found. Resource not found
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the operation area by pk. If not found return 404.
+        2. Clear the id field if any.
+        3. Validate that all the fields from the body belongs to the model.
+        4. Update the values and save.
+        5. Return the updated model.
+
+        NOTES:
+
+        NA
   '/routes/{routeId}':
     parameters:
       - type: string
@@ -122,7 +135,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Get a specific route
+      summary: Get a specific route with full data
       tags:
         - Route
       responses:
@@ -132,20 +145,39 @@ paths:
             application/json:
               schema:
                 $ref: ../common/models/routes.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
       security:
         - JWT: []
-    delete:
-      summary: Delete specific route
-      tags:
-        - Route
-      responses:
-        '202':
-          description: Accepted
-      requestBody: {}
-      security:
-        - JWT: []
+      description: |-
+        Get a specific route
+
+        RESPONSES:
+
+         * 200 OK. Return the specific Route.
+         * 404 Not Found. The requested resource dosn't exists.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find Route by pk
+        2. Return the full route, include stops and trajectories
+
+        NOTES:
+
+        NA
     patch:
-      summary: ''
+      summary: Update route core data
       responses:
         '202':
           description: Accepted
@@ -160,47 +192,25 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/routes.v1.yaml
-  '/routes/{routeId}/stops/':
-    parameters:
-      - type: string
-        name: routeId
-        in: path
-        required: true
-    get:
-      summary: Get the list of stops from the route
-      tags:
-        - Stop
-        - Route
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: ../common/models/stop.v1.yaml
-      security:
-        - JWT: []
-    post:
-      summary: Create and add a new stop in the route
-      tags:
-        - Stop
-        - Route
-      responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: ../common/models/stop.v1.yaml
-      security:
-        - JWT: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: ../common/models/stop.v1.yaml
+      description: |-
+        Update Route model data
+
+        RESPONSES:
+         * 202 Accepted. Return the updated model.
+         * 404 Not Found. The referenced object coudn't be found.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the Route by pk.
+        2. Clear the id field from body data, if any.
+        3. Validate that all the fields from the body belongs to the model.
+        4. Update the values and save.
+
+        NOTES:
+
+        * Is not expected to recive stops & trajectories in the body.
+      operationId: Update route core data
   '/stops/{stopId}':
     parameters:
       - type: string
@@ -221,6 +231,23 @@ paths:
       security:
         - JWT: []
       requestBody: {}
+      description: |
+        Get a specific stop.
+
+        RESPONSES:
+         * 200 OK. Return the specifc Stop.
+         * 404 Not Found. The requested ID dosn't exists.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find Stop by pk.
+        2. Return the Stop model.
+
+        NOTES:
+
+        NA
+      operationId: 'get-stops-{stopID}'
     patch:
       summary: Update the specific stop
       tags:
@@ -239,6 +266,25 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/stop.v1.yaml
+      description: |-
+        Update the specific stop
+
+        RESPONSES:
+         * 202 Accepted. Return the updated Stop model.
+         * 404 Not Found. The referenced object coudn't be found.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the Stop by pk. Else, return 404.
+        2. Verify that the id field from body data is the same as the path; else use the same as the path.
+        3. Validate that all the fields from the body belongs to the model.
+        4. Save the model and return the saved model.
+
+        NOTES:
+
+        !! Edit the seatsMask or seatNumeration fileds could cause unexpected errors on reservations and runs.
+      operationId: 'patch-stops-{stopID}'
     delete:
       summary: Delete the specific stop
       tags:
@@ -343,10 +389,10 @@ paths:
 
         OPERATION:
 
-        1. Find the vehicle model by pk.
-        2. Clear the id field from body data, if any.
+        1. Find the vehicle model by pk. Else, return 404.
+        2. Verify that the id field from body data is the same as the path; else use the same as the path.
         3. Validate that all the fields from the body belongs to the model.
-        4. Update the values and save.
+        4. Save the model and return the saved model.
 
         NOTES:
 
@@ -384,8 +430,8 @@ paths:
         Get the specific vehicle
 
         RESPONSES:
-         * 200 OK. Return the list of buses.
-         * 204 No content. If the query returns empty.
+         * 200 OK. Return the vehicle.
+         * 404 Not Found. The requested ID dosn't exists.
          * 500 ERROR. Something went wrong.
 
         OPERATION:
@@ -395,7 +441,7 @@ paths:
 
         NOTES:
 
-        NA
+        * The operationAreaId filter dosn't apply here. Vehicles are a shared entity betwen all operation areas.
   /buses:
     post:
       summary: Create a new bus
@@ -479,8 +525,8 @@ paths:
 
         OPERATION:
 
-        1. Fin all buses
-        2. If the operationArea param is set filter by area.
+        1. Find all buses
+        2. If the operationArea param is set, filter by area.
         3. Return the list of buses. If empty return 204 and an empty array.
 
         NOTES:
@@ -853,6 +899,164 @@ paths:
       security:
         - JWT: []
       requestBody: {}
+  /routes/:
+    get:
+      summary: Get a list of routes
+      tags:
+        - Route
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/routes.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-routes
+      description: "Get a list of routes\n\nRESPONSES:\n * 200 OK. Return a list of routes\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the routes.\n2. If the operationAreaId filter is set, filter by the operation area.\n3. Return the list of routes.\n\nNOTES: \n\n * The returned routes has only primary data, no stops array, no trajectories array."
+      security:
+        - JWT: []
+      parameters:
+        - schema:
+            type: integer
+            default: '1'
+          in: query
+          name: operationAreaId
+          description: ''
+    post:
+      summary: Create a new route
+      tags:
+        - Route
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/routes.v1.yaml
+      operationId: post-routes
+      description: |-
+        Create a new route.
+
+        RESPONSES:
+         * 201 CREATED. Return the created route.
+         * 500 ERROR. Something went wrong
+
+        OPERATION:
+
+        1. Verify that the operationAreaId exists.
+        2. Delete the id field if set.
+        3. Before save, set the route status as: INACTIVE
+        4. Return the created route.
+
+
+        NOTES:
+
+         * The new route is always set to be INACTIVE. It need to be manually activated once the stops an trajectories are ready.
+         * Is not expected to recive stops & trajectories in the body.
+  /stop:
+    get:
+      summary: Get a list of Stops
+      tags:
+        - Stop
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/stop.v1.yaml
+        '500':
+          description: Internal Server Error
+      operationId: get-stop
+      description: "Get a list of Stops\n\nRESPONSES:\n * 200 OK. Return a list of Stops\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the Stops.\n2. If the operationAreaId filter is set, filter by the operation area.\n3. Return the list of Stops.\n\nNOTES: \n\nNA"
+      security:
+        - JWT: []
+      requestBody: {}
+    post:
+      summary: Create a new Stop
+      tags:
+        - Stop
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/stop.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: post-stop
+      description: |-
+        Create a new Stop.
+
+        RESPONSES:
+         * 201 CREATED. Return the created Stop.
+         * 500 ERROR. Something went wrong
+
+        OPERATION:
+
+        1. Verify that the operationAreaId exists.
+        2. Delete the id field if set.
+        3. Set the nextStopId to be null.
+        4. If prevStopId param is set and the prev stop exist in the same route, make an Insert after stop operation.
+        5. Save the route.
+        6. If the new stop is the last in the route, update the previous ending stop to point to the new stop.
+        7. Return the created stop.
+
+        NOTES:
+
+         * The new Stop is always set to be ACTIVE.
+         * The prevStopId param is optional
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/stop.v1.yaml
+      parameters:
+        - schema:
+            type: integer
+            default: '0'
+          in: query
+          name: prevStopId
+  '/stops/{stopId}/set-status':
+    parameters:
+      - type: string
+        name: stopId
+        in: path
+        required: true
+    patch:
+      summary: Activate or deactivate the stop
+      tags:
+        - Stop
+      responses: {}
+      operationId: patch-stops-stopId-active
+      description: "Activate or deactivate the stop.\n\n\nRESPONSES:\n * 202 Accepted. Return the updated Stop model.\n * 404 Not Found. The referenced object coudn't be found.\n * 500 ERROR. Something went wrong.\n\nOPERATION:\n\n1. Find the Stop by pk. Else, return 404.\n2. If the stop status is diferent from \n\nNOTES:\n\n!! Edit the seatsMask or seatNumeration fileds could cause unexpected errors on reservations and runs.\n"
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isActive:
+                  type: boolean
+              required:
+                - isActive
 components:
   schemas: {}
   securitySchemes:
