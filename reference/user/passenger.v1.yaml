@@ -718,8 +718,8 @@ paths:
             schema:
               type: object
               properties:
-                openPayCard:
-                  type: object
+                cardToken:
+                  type: string
           application/xml:
             schema:
               type: object

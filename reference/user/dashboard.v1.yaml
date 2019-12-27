@@ -976,10 +976,19 @@ paths:
         '500':
           description: Internal Server Error
       operationId: get-stop
-      description: "Get a list of Stops\n\nRESPONSES:\n * 200 OK. Return a list of Stops\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the Stops.\n2. If the operationAreaId filter is set, filter by the operation area.\n3. Return the list of Stops.\n\nNOTES: \n\nNA"
+      description: "Get a list of Stops\n\nRESPONSES:\n * 200 OK. Return a list of Stops\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the Stops.\n2. If the routeId or operationAreaId filter is set, filter by the specific. If both filters are set filter by routeId only.\n\n3. Return the list of Stops.\n\nNOTES: \n\nNA"
       security:
         - JWT: []
       requestBody: {}
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: operationAreaId
+        - schema:
+            type: integer
+          in: query
+          name: routeId
     post:
       summary: Create a new Stop
       tags:
