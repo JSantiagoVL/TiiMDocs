@@ -1051,9 +1051,41 @@ paths:
       summary: Activate or deactivate the stop
       tags:
         - Stop
-      responses: {}
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: ok
+              examples:
+                example:
+                  value:
+                    response: ok
       operationId: patch-stops-stopId-active
-      description: "Activate or deactivate the stop.\n\n\nRESPONSES:\n * 202 Accepted. Return the updated Stop model.\n * 404 Not Found. The referenced object coudn't be found.\n * 500 ERROR. Something went wrong.\n\nOPERATION:\n\n1. Find the Stop by pk. Else, return 404.\n2. If the stop status is diferent from \n\nNOTES:\n\n!! Edit the seatsMask or seatNumeration fileds could cause unexpected errors on reservations and runs.\n"
+      description: |
+        Activate or deactivate the stop.
+
+
+        RESPONSES:
+         * 202 Accepted. Return the updated Stop model.
+         * 404 Not Found. The referenced object coudn't be found.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the Stop by pk. Else, return 404.
+        2. If the stop status is diferent from the one in the body, continue, else return.
+        3. Make the change status operation.
+        4. Return {"response" : "ok"}
+
+        NOTES:
+
+        !! Edit the seatsMask or seatNumeration fileds could cause unexpected errors on reservations and runs.
       security:
         - JWT: []
       requestBody:

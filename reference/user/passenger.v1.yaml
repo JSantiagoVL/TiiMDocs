@@ -122,7 +122,7 @@ paths:
       requestBody: {}
       tags:
         - Stop
-  '/journey/destinations/{originStopID}':
+  '/journey/destinations/{stopID}':
     get:
       summary: Get all possible destinations stops given an origin
       tags:
@@ -156,7 +156,7 @@ paths:
     parameters:
       - schema:
           type: string
-        name: originStopID
+        name: stopID
         in: path
         required: true
   /journey/origins:
@@ -611,21 +611,6 @@ paths:
       security:
         - JWT: []
     parameters: []
-  '/operation-areas/{areaID}':
-    parameters:
-      - type: string
-        name: areaID
-        in: path
-        required: true
-        schema:
-          type: integer
-    get:
-      summary: Get the specified area
-      tags:
-        - OperationArea
-      responses: {}
-      security:
-        - JWT: []
   '/runs/{runID}/seats':
     parameters:
       - type: string
@@ -767,27 +752,6 @@ paths:
         * Register the user as OpenPay Customer and store it in FireBase customer extended table.
         * Create a new TiiM credits card for the user.
         * Others
-    get:
-      summary: ''
-      operationId: get-users-init
-      responses:
-        '200':
-          description: OK
-      description: |-
-        Start the internal setup configuration for a new user.
-        It works like a webhook, after a new user is registered in FireBase this endpoint should be invoked with the new user ID (The one from FireBase)
-
-        Operation:
-
-        * Register the user as OpenPay Customer and store it in FireBase customer extended table.
-        * Create a new TiiM credits card for the user.
-        * Others
-
-        Ref:
-
-        https://firebase.google.com/docs/reference/functions/providers_auth_.userbuilder#on-create
-      security:
-        - JWT: []
   '/payments/cards/{cardID}':
     parameters:
       - type: string
@@ -907,50 +871,11 @@ paths:
         name: code
         in: path
         required: true
-  'operation-areas/{operationArea}/routes':
-    get:
-      summary: 'Get a list of routes data for the view, filter by operation area'
-      tags:
-        - Route
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  startStop:
-                    $ref: ../common/models/stop.v1.yaml
-                  endStop:
-                    $ref: ../common/models/stop.v1.yaml
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: ../common/models/error.v1.yaml
-      operationId: get-journey-routes
-      description: "Get a list of routes for the view, filter by operation area.\n\nOperation \n\n* Use the operationArea param to filter the routes.\n"
-      security:
-        - JWT: []
-      parameters:
-        - schema:
-            type: string
-          in: query
-    parameters:
-      - schema:
-          type: integer
-        name: operationArea
-        in: path
-        required: true
-  '/journey/origins/{descendStopId}':
+  '/journey/origins/{stopId}':
     parameters:
       - schema:
           type: string
-        name: descendStopId
+        name: stopId
         in: path
         required: true
     get:
