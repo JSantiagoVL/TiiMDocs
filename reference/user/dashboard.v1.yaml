@@ -321,7 +321,7 @@ paths:
       operationId: get-vehicle
       security:
         - JWT: []
-      description: "Get the list of all vehicles models\n\nRESPONSES:\n * 200 OK. Return the list of all vehicles\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the vehicles from the list\n\nNOTES: \n\nNA"
+      description: "Get the list of all vehicles models\n\nRESPONSES:\n\n * 200 OK. Return the list of all vehicles.\n * 500 ERROR. Something went wrong.\n\nOPERATION:\n\n1. Retrive all the vehicles from the list\n\nNOTES: \n\n* The operationAreaId filter dosn't apply here. Vehicles are a shared entity betwen all operation areas."
     post:
       summary: Create a new vehicle
       tags:
@@ -427,21 +427,21 @@ paths:
               schema:
                 $ref: ../common/models/error.v1.yaml
       description: |-
-        Get the specific vehicle
+        Get the specific trajectory.
 
         RESPONSES:
-         * 200 OK. Return the vehicle.
+         * 200 OK. Return the trajectory.
          * 404 Not Found. The requested ID dosn't exists.
          * 500 ERROR. Something went wrong.
 
         OPERATION:
 
-        1. Find vehicle by pk
-        2. Return the vehicle model
+        1. Find trajectory by pk.
+        2. Return the trajectory.
 
         NOTES:
 
-        * The operationAreaId filter dosn't apply here. Vehicles are a shared entity betwen all operation areas.
+        NA
   /buses:
     post:
       summary: Create a new bus
@@ -601,46 +601,6 @@ paths:
             schema:
               $ref: ../common/models/bus.v1.yaml
         description: Any value from the object is suficcient. Except id.
-    delete:
-      summary: Delete the bus and cancel the asociated resv
-      tags:
-        - Bus
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  response:
-                    type: string
-                    description: DELETED
-      operationId: 'delete-buses-{busID}'
-      description: |-
-        Delete the bus and cancel all the asociated reservations.
-
-        RESPONSES:
-         * 202 Accepted. Successfully deleted bus.
-         * 404 Not found. Resource not found
-         * 500 ERROR. Something went wrong.
-
-        OPERATION:
-
-        * SuperAdmin only
-        1. Find the bus by pk. If not found return 404.
-        2. Find all the runs asociated to the bus.
-        3. Find all the reservations asociated to previous runs.
-        4. Cancel all the previous reservations.
-        5. Delete the bus.
-        6. Return { "response": "DELETED" }.
-
-
-        NOTES:
-
-        * This action is a super admin only
-      security:
-        - JWT: []
     get:
       summary: Get the specific bus
       operationId: 'get-buses-{busID}'
@@ -836,7 +796,7 @@ paths:
       responses: {}
       operationId: 'delete-driver-{driverID}'
       description: |-
-        Delte a driver
+        Delte a driver (NOT DEVELOPED)
 
         RESPONSES:
          * 202 Accepted. Successfully deleted driver.
@@ -1098,6 +1058,132 @@ paths:
                   type: boolean
               required:
                 - isActive
+  /trajectories:
+    get:
+      summary: Get a list of trajectories
+      tags:
+        - Trajectory
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/trajectory.v1.yaml
+        '500':
+          description: Internal Server Error
+      operationId: get-trajectories
+      description: "Get a list of trajectories.\n\nRESPONSES:\n * 200 OK. Return a list of trajectories.\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the trajectories from the list and filter by the routeId query param.\n2. Return the list of trajectories.\n\nNOTES:  \n\nNA"
+      security:
+        - JWT: []
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: routeId
+          required: true
+    post:
+      summary: Create a new trajectory
+      tags:
+        - Trajectory
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/trajectory.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: post-trajectories
+      description: |-
+        Create a new trajectory
+
+        RESPONSES:
+
+         * 201 CREATED. Return the created trajectory.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Delete the id param if set.
+        2. Verify that a record with aStopId, bStopId and routeId dosn't exist in the DB. (Otherwise the DB will not allow an insert)
+        3. Verify that the price and time params are set.
+        4. Verify that the aStop and bStop params exist inside the route.
+        5. Save and return the created trajectoy.
+
+        NOTES:
+
+        NA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/trajectory.v1.yaml
+          application/xml:
+            schema:
+              $ref: ../common/models/trajectory.v1.yaml
+      security:
+        - JWT: []
+  '/trajectories/{trajectoryId}':
+    parameters:
+      - type: string
+        name: trajectoryId
+        in: path
+        required: true
+    patch:
+      summary: Update the specific trajectory
+      tags:
+        - Trajectory
+      responses: {}
+      operationId: patch-trajectories-trajectoryId
+      description: |-
+        Update the specific trajectory.
+
+        RESPONSES:
+
+         * 202 Accepted. Return the updated trajectory.
+         * 404 Not Found. The referenced object coudn't be found.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the trajectory by pk. Else, return 404.
+        2. The id, aStopId and bStopId params can't be modified.
+        3. Validate that all the fields from the body belongs to the model.
+        4. Save the model and return the saved model.
+
+        NOTES:
+
+        NA
+    get:
+      summary: Get the specific trajectory
+      tags:
+        - Trajectory
+      responses: {}
+      operationId: get-trajectories-trajectoryId
+      description: |-
+        Get the specific trajectory.
+
+        RESPONSES:
+         * 200 OK. Return the trajectory.
+         * 404 Not Found. The requested ID dosn't exists.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find trajectory by pk.
+        2. Return the trajectory.
+
+        NOTES:
+
+        NA
 components:
   schemas: {}
   securitySchemes:

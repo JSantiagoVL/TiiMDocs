@@ -635,11 +635,15 @@ paths:
                     type: array
                     items:
                       type: string
-                  seatRows:
+                  seatsRows:
                     type: integer
+                  seatsNumeration:
+                    type: array
+                    items:
+                      type: integer
                 required:
                   - seatsReservations
-                  - seatRows
+                  - seatsRows
               examples:
                 example:
                   value:
