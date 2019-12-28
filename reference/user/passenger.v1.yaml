@@ -426,7 +426,7 @@ paths:
     parameters: []
     get:
       summary: Get all client reservations
-      description: "Return the client reservations.\n\nOperation:\n\n* The reservations will be filtered by the user who made the request, userID as given in JWT.\n* Fileter by status, possible values: \n\n  * IN_PAYMENT: Awaiting for payment\n\n  * CONFIRMED: Payment done.\n\n  * CANCELED_USER: User canceled the reservation.\n\n  * CANCELED_EXPIRED: No payment in more than 5 min.\n\n  * CANCELED_ADMIN: Some admin canceled the reservation.\n\n  * IN_PROGRESS: The passenger is in the journey.\n\n  * ENDED: The journey ended.\n\n  * ABSENT: The bus leaved without the passenger."
+      description: "Return the client reservations.\n\nOperation:\n\n* The reservations will be filtered by the user who made the request, userID as given in JWT.\n* Fileter by status, possible values: \n\n  * IN_PAYMENT: Awaiting for payment\n\n  * CONFIRMED: Payment done.\n\n  * CANCELED_USER: User canceled the reservation.\n\n  * CANCELED_EXPIRED: No payment in more than 5 min.\n\n  * CANCELED_ADMIN: Some admin canceled the reservation.\n\n  * IN_PROGRESS: The passenger is in the journey.\n\n  * ENDED: The journey ended.\n\n  * ABSENT: The bus leaved without the passenger.\n  \n  1. Get the list of reservations \n  2. "
       parameters:
         - schema:
             type: string

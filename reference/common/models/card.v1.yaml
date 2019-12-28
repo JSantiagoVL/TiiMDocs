@@ -34,3 +34,5 @@ properties:
     description: The oabtained token that representes the card inside openpay
   cardHolder:
     type: string
+  sourceId:
+    type: string
