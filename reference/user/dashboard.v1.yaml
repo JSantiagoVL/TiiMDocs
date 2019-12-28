@@ -1155,7 +1155,7 @@ paths:
         OPERATION:
 
         1. Find the trajectory by pk. Else, return 404.
-        2. The id, aStopId and bStopId params can't be modified.
+        2. The id, routeId, aStopId and bStopId params can't be modified.
         3. Validate that all the fields from the body belongs to the model.
         4. Save the model and return the saved model.
 

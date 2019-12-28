@@ -426,17 +426,6 @@ paths:
     parameters: []
     get:
       summary: Get all client reservations
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: ../common/models/reservation.v1.yaml
-              examples:
-                example-1: {}
       description: "Return the client reservations.\n\nOperation:\n\n* The reservations will be filtered by the user who made the request, userID as given in JWT.\n* Fileter by status, possible values: \n\n  * IN_PAYMENT: Awaiting for payment\n\n  * CONFIRMED: Payment done.\n\n  * CANCELED_USER: User canceled the reservation.\n\n  * CANCELED_EXPIRED: No payment in more than 5 min.\n\n  * CANCELED_ADMIN: Some admin canceled the reservation.\n\n  * IN_PROGRESS: The passenger is in the journey.\n\n  * ENDED: The journey ended.\n\n  * ABSENT: The bus leaved without the passenger."
       parameters:
         - schema:
@@ -444,6 +433,22 @@ paths:
             default: CONFIRMED
           in: query
           name: status
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservation:
+                    $ref: ../common/models/reservation.v1.yaml
+                  departureDate:
+                    type: string
+                  aboardStopName:
+                    type: string
+                  descendStopName:
+                    type: string
   '/reservations/{reservationID}':
     parameters:
       - schema:
