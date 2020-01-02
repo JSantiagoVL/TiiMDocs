@@ -807,8 +807,8 @@ paths:
 
         * SuperAdmin only
         1. Find the driver by pk. If not found return 404.
-        2. Find all the runs asociated to the driver.
-        3. Find all the reservations asociated to previous runs.
+        2. Find all the runs associated to the driver.
+        3. Find all the reservations associated to previous runs.
         4. Cancel all the previous reservations.
         5. Delete the driver.
         6. Return { "response": "DELETED" }.
@@ -1184,6 +1184,395 @@ paths:
         NOTES:
 
         NA
+  /runs/:
+    get:
+      summary: Get a Run
+      tags:
+        - Run
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/run.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-runs
+      description: "Get a list of runs.\n\nRESPONSES:\n\n * 200 OK. Return a list of trajectories.\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the runs from the list.\n2. Filter by the operationAreaId query param and then, if set, filter by status.\n3. Return the list of runs.\n\nNOTES:  \n\nNA"
+      security:
+        - JWT: []
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: 'operationAreaId '
+        - schema:
+            type: string
+            enum:
+              - OPEN
+              - IN_JOURNEY
+              - ENDED
+          in: query
+          name: status
+    post:
+      summary: Create a new Run
+      tags:
+        - Run
+      responses: {}
+      operationId: post-runs
+      description: |-
+        Create a new Run
+
+        RESPONSES:
+
+         * 201 CREATED. Return the created Run.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Delete the id param if set.
+        2. Verify that a record with routeId, stopId, busId, driverId and departureDate dosn't exist in the DB. Return error if a duplicate is found.
+        3. Validate that the related entities exist. (Bus, driver, route).
+        4. Validate that the departue date is a future date.
+        5. Save and return the created Run.
+
+        NOTES:
+
+        The stop in the request body should be the ID of the source stop, not the whole Stop object.
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/run.v1.yaml
+  '/run/{runID}':
+    parameters:
+      - type: string
+        name: runID
+        in: path
+        required: true
+    patch:
+      summary: Update run data
+      tags: []
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/run.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: patch-run-runID
+      description: |-
+        Update the specific Run data
+
+        RESPONSES:
+         * 202 Accepted. Return the updated Runmodel.
+         * 404 Not Found. The referenced object coudn't be found.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the Run by pk. Else, return 404.
+        2. Delete the filed id if set.
+        3. Only the bus and driver fields can be changed.
+        4. Save the model and return the saved model.
+
+        NOTES:
+
+        If other field is needed to be changed, that run need to be canceled, and then create a new one. In case of cancelation all the reservations will be notified.
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/run.v1.yaml
+    get:
+      summary: Get a specific Run.
+      operationId: get-run-runID
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  run:
+                    $ref: ../common/models/run.v1.yaml
+                  driverName:
+                    type: string
+                  routeName:
+                    type: string
+                  busLicense:
+                    type: string
+                  busSerial:
+                    type: string
+                  reservations:
+                    type: array
+                    items:
+                      $ref: ../common/models/reservation.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      description: "Get a specific Run.\n\nRESPONSES:\n * 200 OK. Return the specifc Run.\n * 404 Not Found. The requested ID dosn't exists.\n * 500 ERROR. Something went wrong.\n\nOPERATION:\n\n1. Find Run by pk.\n2. Get the associated models ( Route, Bus, Driver).\n3. Get the list of associated reservations whom status are one of: \n\n\nNOTES:\n\nNA\n"
+      security:
+        - JWT: []
+  '/runs/{runID}/cancel':
+    parameters:
+      - type: string
+        name: runID
+        in: path
+        required: true
+    patch:
+      summary: Cancel a specific Run
+      tags: []
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: patch-runs-runID-cancel
+      description: "Cancel a specific Run.\n\n\nRESPONSES:\n\n * 202 Accepted.\n * 404 Not Found. The referenced object coudn't be found.\n * 409 Conflict. Validations were invalid.\n * 500 ERROR. Something went wrong.\n\nOPERATION:\n\n1. Find the Run by pk. Else, return 404.\n2. Continue if the status is OPEN || CLOSED. Else, return 409\n3. Get the list of reservations associated to the run.\n4. For each reservation:\n    * If reservation.status = CONFIRMED && the time (Run.despartureDate - reservation.createdAt) < 30 min:\n      * Make a reimbursement as TiiM credits.\n      * Send push notification to the passenger device.\n      * Set the reservation status to: CANCELED_ADMIN.\n5. Set run status to: CANCELLED.    \n6. Return {\"response\" : \"ok\"}\n\nNOTES:\n\n* Check the flow diagrams for reimbursement procedure.\n* Check the notifications functions in order to send a push notification."
+      security:
+        - JWT: []
+  /runs/planners:
+    get:
+      summary: Get the list of run planner
+      tags:
+        - Run-planner
+        - Run
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/run-planner.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-runs-planners
+      description: "Get a list of Stops\n\nRESPONSES:\n * 200 OK. Return a list of Run-planners\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the Run-planners.\n2. Filter by operationAreaId if set, routeId if set. Else return all.\n3. Return the list of Run-planners.\n\nNOTES: \n\nNA"
+      security:
+        - JWT: []
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: operationAreaId
+        - schema:
+            type: integer
+          in: query
+          name: routeId
+      requestBody: {}
+    post:
+      summary: Create a new run planner
+      tags:
+        - Run-planner
+        - Run
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/run-planner.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: post-runs-planners
+      description: |-
+        Create a new Run-planner.
+
+        RESPONSES:
+
+         * 201 CREATED. Return the created object.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Delete the id param if set.
+        2. Verify that a record with routeId, stopId, busId, departureTime, departureWeekDay dosn't exist in the DB. Return error if a duplicate is found.
+        3. Validate that the related entities exist. (Bus, driver, route).
+        5. Save and return the created Run-planner.
+
+        NOTES:
+
+        NA
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/run-planner.v1.yaml
+  '/runs/planners/{plannerID}':
+    parameters:
+      - type: string
+        name: plannerID
+        in: path
+        required: true
+    get:
+      summary: Get a specific run planner.
+      tags:
+        - Run-planner
+        - Run
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/run-planner.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-runs-planners-plannerID
+      security:
+        - JWT: []
+      description: |
+        Get a specific stop.
+
+        RESPONSES:
+         * 200 OK. Return the specifc run planner.
+         * 404 Not Found. The requested ID dosn't exists.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find run planner by pk.
+        2. Return the run planner model.
+
+        NOTES:
+
+        NA
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/run-planner.v1.yaml
+    patch:
+      summary: Update a specific run planner data.
+      tags:
+        - Run-planner
+        - Run
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/run-planner.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: patch-runs-planners-plannerID
+      description: |-
+        Update a specific run planner data.
+
+        RESPONSES:
+         * 202 Accepted. Return the updated  Run-planner model.
+         * 404 Not Found. The referenced object coudn't be found.
+         * 500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find the Run-planner by pk. Else, return 404.
+        2. If id field is set, delete the field.
+        3. Validate, only the bus and driver fields can be modifieded.
+        4. Get all the runs that belong to the the Run-planner and departure date is on future.
+        5. From the result, update the runs to have the same data.
+        6. Return the updated Run-planner model
+
+        NOTES:
+
+        NA
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/run-planner.v1.yaml
 components:
   schemas: {}
   securitySchemes:

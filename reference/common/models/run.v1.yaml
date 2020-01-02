@@ -21,8 +21,11 @@ properties:
       - OPEN
       - CLOSED
       - COMPLETED
+      - IN_JOURNEY
   stop:
     $ref: ./stop.v1.yaml
+  operationAreaId:
+    type: integer
 required:
   - id
   - routeId

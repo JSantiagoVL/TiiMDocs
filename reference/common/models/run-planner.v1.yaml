@@ -1,0 +1,26 @@
+title: Run Planner
+type: object
+x-tags:
+  - Run
+properties:
+  id:
+    type: integer
+  runId:
+    type: integer
+  stopId:
+    type: integer
+  busId:
+    type: integer
+  driverId:
+    type: integer
+  departureWeekDay:
+    type: integer
+  departureTime:
+    type: string
+  status:
+    type: string
+    enum:
+      - ACTIVE
+      - DEACTIVATED
+  operationAreaId:
+    type: integer

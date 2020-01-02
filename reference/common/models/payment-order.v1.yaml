@@ -14,6 +14,7 @@ properties:
       - CANCELED
       - REIMBURSED
       - AWAITING_PAYMENT
+      - REIMBURSED_AS_CREDIT
   purchases:
     type: array
     items:
