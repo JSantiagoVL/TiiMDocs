@@ -220,19 +220,37 @@ paths:
       summary: End the current journey
       tags: []
       responses:
-        '200':
-          description: OK
+        '202':
+          description: Accepted
           content:
             application/json:
               schema:
                 $ref: ../common/models/run.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
       operationId: patch-runs-runID-end
       description: |-
         End the current journey.
 
         RESPONSES:
 
-        * 200. Ok
+        * 202. Accepted
         * 404. Not found: the runID dosnt exist
         * 406. Not acceptable: If some validation fail
         * 500. ERROR. Something went wrong.
@@ -241,9 +259,9 @@ paths:
 
         1. Get the run by pk. Else return 404.
         2. Validate that the run status is in IN_JOURNEY. Else return 406.
-        3. Validate tha the driver who made the request is the same on the run.
-        5. Change run staus to: ENDED
-        7. Return the updated run.
+        3. Validate that the driver who made the request is the same on the run.
+        4. Change run staus to: ENDED
+        5. Return the updated run.
 
         NOTES:
 
