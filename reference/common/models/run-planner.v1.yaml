@@ -5,7 +5,7 @@ x-tags:
 properties:
   id:
     type: integer
-  runId:
+  routeId:
     type: integer
   stopId:
     type: integer

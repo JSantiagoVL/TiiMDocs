@@ -1,9 +1,276 @@
-openapi: '3.0.0'
+openapi: 3.0.0
 info:
   title: driver.v1
   version: '1.0'
 servers:
-- url: http://localhost:3000
-paths: {}
+  - url: 'http://localhost:3000/api/v1/driver'
+    description: localhost
+  - description: production
+    url: 'https://api.gotiim.com/api/v1/driver'
+paths:
+  /runs:
+    get:
+      summary: Get the runs that driver has
+      tags:
+        - Runs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    routeName:
+                      type: string
+                    run:
+                      $ref: ../common/models/run.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/run.v1.yaml
+      operationId: get-runs
+      description: |-
+        Get the runs that driver has.
+
+        RESPONSES:
+
+        * 200
+        * 500
+
+        OPERATION:
+
+        1. Get all the runs filtered by the driverId = user who made de user.
+        2. Filter where departureDate(Day) = Today.
+        3. The filter by status = OPEN || CLOSED || IN_JOURNEY.
+        4. Return the runs.
+
+        NOTES:
+
+         NA
+      security:
+        - JWT: []
+  '/reservations-by-run/{runID}':
+    parameters:
+      - type: string
+        name: runID
+        in: path
+        required: true
+    get:
+      summary: Get the run in detail.
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/reservation.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-runs-runID
+      description: |-
+        Get the run in detail.
+
+        RESPONSES:
+
+        * 200
+        * 404
+        * 500
+
+        OPERATION:
+
+        1. Get the run by pk.
+        2. Get the list of associated reservations by the runId.
+        3. The route name and departure date.
+        3. Return the list of runs.
+
+        NOTES:
+
+         NA
+      security:
+        - JWT: []
+  '/runs/{runID}/lets-go':
+    parameters:
+      - type: string
+        name: runID
+        in: path
+        required: true
+    patch:
+      summary: Upadate aboard reservations list
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/reservation.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: patch-runs-runID-lets-go
+      description: |-
+        Upadate aboard reservations list.
+
+        RESPONSES:
+
+        * 200. Ok
+        * 404. Not found: the runID dosnt exist
+        * 406. Not acceptable: If some validation fail
+        * 500. ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Get the list of reservations.
+        2. Validate that the run status is: OPEN| CLOSED | COMPLETED | IN_JOURNEY. Else return 406
+        3. IF the current status is OPEN | CLOSED : Set Run status to IN_JOURNEY.
+        4. For each reservation, ignore all fields except status and id.
+        5. Validate that each reservation belong to the runId on the path. Else ignore the reservation.
+        6. Validate the status is one of the next: IN_PROGRESS | ENDED | ABSENT. Else ignore
+        7. Return the updated list of reservations.
+
+        NOTES:
+
+         NA
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: ../common/models/reservation.v1.yaml
+  '/stops-by-route/{routeID}':
+    parameters:
+      - type: string
+        name: routeID
+        in: path
+        required: true
+    get:
+      summary: Get the list of active stops that belong to a route
+      tags:
+        - Stops
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/stop.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-stops-by-route-routeID
+      description: |-
+        Get the list of active stops that belong to a route.
+
+        RESPONSES:
+
+        * 200
+        * 404
+        * 500
+
+        OPERATION:
+
+        1. Get the active stops of the route.
+
+
+        NOTES:
+
+         NA
+      security:
+        - JWT: []
+  '/runs/{runID}/end':
+    parameters:
+      - type: string
+        name: runID
+        in: path
+        required: true
+    patch:
+      summary: End the current journey
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/run.v1.yaml
+      operationId: patch-runs-runID-end
+      description: |-
+        End the current journey.
+
+        RESPONSES:
+
+        * 200. Ok
+        * 404. Not found: the runID dosnt exist
+        * 406. Not acceptable: If some validation fail
+        * 500. ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Get the run by pk. Else return 404.
+        2. Validate that the run status is in IN_JOURNEY. Else return 406.
+        3. Validate tha the driver who made the request is the same on the run.
+        5. Change run staus to: ENDED
+        7. Return the updated run.
+
+        NOTES:
+
+         NA
+      security:
+        - JWT: []
+      requestBody: {}
 components:
   schemas: {}
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: Bearer

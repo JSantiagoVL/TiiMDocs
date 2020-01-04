@@ -98,7 +98,7 @@ paths:
             type: string
           in: query
           name: keyword
-      description: "Functionallity:\n* Get the stops as specified with the filters.\n* The filters have an additive AND behaviour.\n* All the filters are optional.\n* Filter by stopType, possible values: ABOARD, DESCEND, BOTH. \nIf ABOARD is selected then system will search by ABOARD type and BOTH type, in order to return all posible aboard stops. Same for descend."
+      description: "Functionallity:\n\n* Get the stops as specified with the filters.\n* The filters have an additive AND behaviour.\n* All the filters are optional.\n* Filter by stopType, possible values: ABOARD, DESCEND, BOTH. \nIf ABOARD is selected then system will search by ABOARD type and BOTH type, in order to return all posible aboard stops. Same for descend."
   '/stops/{stopID}':
     parameters:
       - type: string
@@ -399,6 +399,13 @@ paths:
             application/json:
               schema:
                 $ref: ../common/models/reservation.v1.yaml
+        '409':
+          description: Conflict
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
         '500':
           description: Internal Server Error
           content:

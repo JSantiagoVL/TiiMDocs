@@ -5,7 +5,7 @@ info:
 servers:
   - url: 'http://localhost:3000/api/v1/dashboard'
     description: Localhost
-  - url: 'http://api.gotiim.com/api/v1/dashboard'
+  - url: 'https://api.gotiim.com/api/v1/dashboard'
     description: Production
 paths:
   /operation-areas:
@@ -1388,7 +1388,7 @@ paths:
       description: "Cancel a specific Run.\n\n\nRESPONSES:\n\n * 202 Accepted.\n * 404 Not Found. The referenced object coudn't be found.\n * 409 Conflict. Validations were invalid.\n * 500 ERROR. Something went wrong.\n\nOPERATION:\n\n1. Find the Run by pk. Else, return 404.\n2. Continue if the status is OPEN || CLOSED. Else, return 409\n3. Get the list of reservations associated to the run.\n4. For each reservation:\n    * If reservation.status = CONFIRMED && the time (Run.despartureDate - reservation.createdAt) < 30 min:\n      * Make a reimbursement as TiiM credits.\n      * Send push notification to the passenger device.\n      * Set the reservation status to: CANCELED_ADMIN.\n5. Set run status to: CANCELLED.    \n6. Return {\"response\" : \"ok\"}\n\nNOTES:\n\n* Check the flow diagrams for reimbursement procedure.\n* Check the notifications functions in order to send a push notification."
       security:
         - JWT: []
-  /runs/planners:
+  /runs-planners:
     get:
       summary: Get the list of run planner
       tags:
@@ -1467,7 +1467,8 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/run-planner.v1.yaml
-  '/runs/planners/{plannerID}':
+    parameters: []
+  '/runs-planners/{plannerID}':
     parameters:
       - type: string
         name: plannerID
