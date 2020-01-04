@@ -92,25 +92,7 @@ paths:
               schema:
                 $ref: ../common/models/error.v1.yaml
       operationId: get-runs-runID
-      description: |-
-        Get the run in detail.
-
-        RESPONSES:
-
-        * 200
-        * 404
-        * 500
-
-        OPERATION:
-
-        1. Get the run by pk.
-        2. Get the list of associated reservations by the runId.
-        3. The route name and departure date.
-        3. Return the list of runs.
-
-        NOTES:
-
-         NA
+      description: "Get the run in detail.\n\nRESPONSES:\n\n* 200. OK \n* 404. Not found\n* 500. Error\n\nOPERATION:\n\n1. Get the run by pk. Else 404\n2. Get the list of associated reservations by the runId.\n3. Return the list of reservations.\n\nNOTES:\n\n NA"
       security:
         - JWT: []
   '/runs/{runID}/lets-go':
@@ -156,19 +138,20 @@ paths:
         RESPONSES:
 
         * 200. Ok
-        * 404. Not found: the runID dosnt exist
+        * 404. Not found: the runID dosn't exist
         * 406. Not acceptable: If some validation fail
         * 500. ERROR. Something went wrong.
 
         OPERATION:
 
-        1. Get the list of reservations.
-        2. Validate that the run status is: OPEN| CLOSED | COMPLETED | IN_JOURNEY. Else return 406
+        1. Find the run by pk. Else 404.
+        2. Validate that the run status is: OPEN| CLOSED | COMPLETED | IN_JOURNEY. Else return 406 Not acceptable.
         3. IF the current status is OPEN | CLOSED : Set Run status to IN_JOURNEY.
-        4. For each reservation, ignore all fields except status and id.
+        4. For each reservation on the request, ignore all fields except status and id.
         5. Validate that each reservation belong to the runId on the path. Else ignore the reservation.
-        6. Validate the status is one of the next: IN_PROGRESS | ENDED | ABSENT. Else ignore
-        7. Return the updated list of reservations.
+        6. Validate the status of the reservation is one of the next: IN_PROGRESS | ENDED | ABSENT. Else ignore the reservations.
+        7. Update the reservation (save)
+        8. END FOREACH. Return the updated list of reservations.
 
         NOTES:
 
