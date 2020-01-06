@@ -752,22 +752,6 @@ paths:
         * Return a list of cards associated to the user.
         * The User ID is obtained by JWT.
         * The list should never be empty, the client has an initial TiiM credits card created at clients setup.
-  /users/init:
-    post:
-      summary: Start the internal setup configuration for a new user
-      tags:
-        - User
-      responses: {}
-      operationId: post-users-init
-      description: |-
-        Start the internal setup configuration for a new user.
-        It works like a webhook, after a new user is registered in FireBase this endpoint should be invoked with the new user ID (The one from FireBase)
-
-        Operation:
-
-        * Register the user as OpenPay Customer and store it in FireBase customer extended table.
-        * Create a new TiiM credits card for the user.
-        * Others
   '/payments/cards/{cardID}':
     parameters:
       - type: string
@@ -1176,6 +1160,17 @@ paths:
         - Bill
       responses: {}
       operationId: patch-bill-profile-update-auto-bill
+  /init:
+    get:
+      summary: Initialize a new passanger user
+      tags: []
+      responses:
+        '200':
+          description: OK
+      operationId: get-init
+      description: "Start the internal setup configuration for a new passenger user.\n\nResponse:\n  200. OK\n  500. Error\n\nOperation:\n\n* Validate that inside de FireBase extended user table there is not asociated egsitry for the user, if true then:\n * Create a new entry for the extended Firebas user table with:\n  uid: user_id_firebase\n  tipo: CLIENTE\n  customerId: customer conekta.\n  \nNotes: \n\nNA\n\n  "
+      security:
+        - JWT: []
 components:
   schemas: {}
   securitySchemes:

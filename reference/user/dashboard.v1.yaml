@@ -919,7 +919,7 @@ paths:
 
          * The new route is always set to be INACTIVE. It need to be manually activated once the stops an trajectories are ready.
          * Is not expected to recive stops & trajectories in the body.
-  /stop:
+  /stops:
     get:
       summary: Get a list of Stops
       tags:
@@ -979,10 +979,10 @@ paths:
         1. Verify that the operationAreaId exists.
         2. Delete the id field if set.
         3. Set the nextStopId to be null.
-        4. If prevStopId param is set and the prev stop exist in the same route, make an Insert after stop operation.
-        5. Save the route.
-        6. If the new stop is the last in the route, update the previous ending stop to point to the new stop.
-        7. Return the created stop.
+        5. If prevStopId param is set and the prev stop exist in the same route, make an Insert after stop operation.
+        6. Save the route.
+        7. If the new stop is the last in the route, update the previous ending stop to point to the new stop.
+        8. Return the created stop.
 
         NOTES:
 
@@ -1001,6 +1001,7 @@ paths:
             default: '0'
           in: query
           name: prevStopId
+    parameters: []
   '/stops/{stopId}/set-status':
     parameters:
       - type: string
@@ -1197,7 +1198,16 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: ../common/models/run.v1.yaml
+                  type: object
+                  properties:
+                    run:
+                      $ref: ../common/models/run.v1.yaml
+                    routeName:
+                      type: string
+                    busSerial:
+                      type: string
+                    driverName:
+                      type: string
         '500':
           description: Internal Server Error
           content:

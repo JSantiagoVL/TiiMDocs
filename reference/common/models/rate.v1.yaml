@@ -2,6 +2,14 @@ title: Rate
 type: object
 x-tags:
   - Rate
+description: |-
+  The users rate the given service.
+
+  Notes:
+
+  * The related user is accesible through the reservation relation.
+
+  * A multiple analysis colud be perfomed through the data realted to reservarion, like driver, route, bus unit, etc.
 properties:
   id:
     type: integer
@@ -16,11 +24,5 @@ properties:
   createdAt:
     type: string
     description: 'YYYY-MM-DD HH:MM:SS'
-description: |-
-  The users rate the given service.
-
-  Notes:
-
-  * The related user is accesible through the reservation relation.
-
-  * A multiple analysis colud be perfomed through the data realted to reservarion, like driver, route, bus unit, etc.
+  commentary:
+    type: string
