@@ -384,7 +384,8 @@ paths:
         3. Set the status to OPEN.
         4. Add to log: "[TimeStamp] New alert from driver: [driverName]"
         5. IF the run is on status IN_JOURNEY AND driverId = driver who made the request, THEN save. ELSE: Return 406 not acceptable.
-        6. Return the created alert.
+        6. Send a socket SOS alert to the dashboard.
+        7. Return the created alert.
 
         NOTES:
 
