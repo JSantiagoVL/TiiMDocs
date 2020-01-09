@@ -269,6 +269,133 @@ paths:
       security:
         - JWT: []
       requestBody: {}
+  '/run-tracking/{runId}':
+    parameters:
+      - type: string
+        name: runId
+        in: path
+        required: true
+    patch:
+      summary: Update the position of a vehicle
+      tags: []
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+              examples:
+                example:
+                  value:
+                    response: ok
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: patch-tracking-runId
+      description: |-
+        Update the position of a vehicle
+
+        RESPONSES:
+
+        * 202. Accepted
+        * 406. Not acceptable
+        * 500. Error
+
+        OPERATION:
+
+        1. Get the run by pk. Else return 404
+        2. IF the run is on status IN_JOURNEY AND driverId = driver who made the request, then update the position. ELSE: Return 406 not acceptable.
+        3. Return 202 {response: ok}
+
+
+        NOTES:
+
+         NA
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat:
+                  type: number
+                long:
+                  type: number
+  '/run-sos/{runId}':
+    parameters:
+      - type: string
+        name: runId
+        in: path
+        required: true
+    post:
+      summary: Craee a new SOS alert to the operator.
+      tags:
+        - SOS
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/sos-alert.v1.yaml
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/sos-alert.v1.yaml
+        '500':
+          description: Internal Server Error
+      operationId: post-run-sos-runId
+      description: |-
+        Send a new SOS alert to the operator.
+
+        RESPONSES:
+
+        * 201. Created.
+        * 406. Not acceptable.
+        * 500. Error.
+
+        OPERATION:
+
+        1. Get the run by runId inside the body. Else return 404
+        2. Clear the id and status fiels from the body.
+        3. Set the status to OPEN.
+        4. Add to log: "[TimeStamp] New alert from driver: [driverName]"
+        5. IF the run is on status IN_JOURNEY AND driverId = driver who made the request, THEN save. ELSE: Return 406 not acceptable.
+        6. Return the created alert.
+
+        NOTES:
+
+         The description field is set for a future implementation.
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/sos-alert.v1.yaml
 components:
   schemas: {}
   securitySchemes:
