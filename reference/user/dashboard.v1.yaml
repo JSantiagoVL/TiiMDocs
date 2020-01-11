@@ -1075,7 +1075,14 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: ../common/models/trajectory.v1.yaml
+                  type: object
+                  properties:
+                    trajectory:
+                      $ref: ../common/models/trajectory.v1.yaml
+                    aStopName:
+                      type: string
+                    bStopName:
+                      type: string
         '500':
           description: Internal Server Error
       operationId: get-trajectories
@@ -1170,7 +1177,25 @@ paths:
       summary: Get the specific trajectory
       tags:
         - Trajectory
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/trajectory.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
       operationId: get-trajectories-trajectoryId
       description: |-
         Get the specific trajectory.
@@ -1188,6 +1213,8 @@ paths:
         NOTES:
 
         NA
+      security:
+        - JWT: []
   /runs/:
     get:
       summary: Get a Run

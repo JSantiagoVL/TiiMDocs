@@ -342,12 +342,8 @@ paths:
                   type: number
                 long:
                   type: number
-  '/run-sos/{runId}':
-    parameters:
-      - type: string
-        name: runId
-        in: path
-        required: true
+  /run-sos:
+    parameters: []
     post:
       summary: Craee a new SOS alert to the operator.
       tags:
@@ -383,7 +379,7 @@ paths:
         2. Clear the id and status fiels from the body.
         3. Set the status to OPEN.
         4. Add to log: "[TimeStamp] New alert from driver: [driverName]"
-        5. IF the run is on status IN_JOURNEY AND driverId = driver who made the request, THEN save. ELSE: Return 406 not acceptable.
+        5. IF the run is on status IN_JOURNEY || OPEN || CLOSED AND driverId = driver who made the request, THEN save. ELSE: Return 406 not acceptable.
         6. Send a socket SOS alert to the dashboard.
         7. Return the created alert.
 

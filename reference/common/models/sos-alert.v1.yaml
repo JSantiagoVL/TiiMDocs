@@ -5,14 +5,18 @@ x-tags:
 properties:
   id:
     type: string
-  case:
+  situation:
     type: string
   runId:
     type: string
   lat:
-    type: string
+    type:
+      - string
+      - 'null'
   long:
-    type: string
+    type:
+      - string
+      - 'null'
   time:
     type: string
   status:
@@ -21,7 +25,9 @@ properties:
       - OPEN
       - IN_PROGRESS
       - CLOSED
-  decription:
+  workLog:
     type:
       - string
       - 'null'
+  description:
+    type: string
