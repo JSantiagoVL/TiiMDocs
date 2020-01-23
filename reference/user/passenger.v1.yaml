@@ -11,6 +11,8 @@ servers:
     description: Localhost
   - description: Produccion
     url: 'http://api.gotiim.com/api/v1/passenger'
+  - url: 'https://testapi.gotiim.com/api/v1/passenger'
+    description: Testing
 paths:
   /routes:
     get:
@@ -198,6 +200,10 @@ paths:
               - BOTH
           in: query
           name: stoptype
+        - schema:
+            type: string
+          in: query
+          name: manualReload
       tags:
         - Journey
       description: ''
@@ -1158,8 +1164,60 @@ paths:
       summary: Update auto billing status
       tags:
         - Bill
-      responses: {}
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isAutoBillEnabled:
+                    type: boolean
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
       operationId: patch-bill-profile-update-auto-bill
+      description: |-
+        Update auto billing status.
+
+        Responses:
+
+        202 Accepted: The changes were successfully made.
+        406 Not Acceptable. The users bill profile coudn't be found.
+        500 ERROR. Something went wrong.
+
+        OPERATION:
+
+        1. Find de the user profile by the user id inside de JWT token.
+        2. Validate the request to be a valid boolean.
+        3. If th user dosn't has a profile: return 406 The users bill profile coudn't be found.
+        4. Set the field isAutoBillEnabled inside the "Invoice Profile" model to be equal to the value set by the body request.
+        5. If error throw error.
+        6. Return the new value {isAutoBillEnabled: true | false}
+
+        Notes:
+
+        NA
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isAutoBillEnabled:
+                  type: boolean
   /init:
     get:
       summary: Initialize a new passanger user

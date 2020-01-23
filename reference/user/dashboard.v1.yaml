@@ -439,8 +439,8 @@ paths:
 
         OPERATION:
 
-        1. Find trajectory by pk.
-        2. Return the trajectory.
+        1. Find vehicle model by pk.
+        2. Return the vehicle model.
 
         NOTES:
 
@@ -874,6 +874,8 @@ paths:
             application/json:
               schema:
                 $ref: ../common/models/routes.v1.yaml
+        '204':
+          description: No Content
         '500':
           description: Internal Server Error
           content:
@@ -902,6 +904,8 @@ paths:
             application/json:
               schema:
                 $ref: ../common/models/routes.v1.yaml
+        '400':
+          description: Bad Request
       operationId: post-routes
       description: |-
         Create a new route.
@@ -922,6 +926,13 @@ paths:
 
          * The new route is always set to be INACTIVE. It need to be manually activated once the stops an trajectories are ready.
          * Is not expected to recive stops & trajectories in the body.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/routes.v1.yaml
+      security:
+        - JWT: []
   /stops:
     get:
       summary: Get a list of Stops
@@ -1440,9 +1451,16 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: ../common/models/run-planner.v1.yaml
+                type: object
+                properties:
+                  runPlanner:
+                    $ref: ../common/models/run-planner.v1.yaml
+                  routeName:
+                    type: string
+                  busSerial:
+                    type: string
+                  driverName:
+                    type: string
         '500':
           description: Internal Server Error
           content:
@@ -1450,7 +1468,7 @@ paths:
               schema:
                 $ref: ../common/models/error.v1.yaml
       operationId: get-runs-planners
-      description: "Get a list of Stops\n\nRESPONSES:\n * 200 OK. Return a list of Run-planners\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the Run-planners.\n2. Filter by operationAreaId if set, routeId if set. Else return all.\n3. Return the list of Run-planners.\n\nNOTES: \n\nNA"
+      description: "Get the list of run planner.\n\nRESPONSES:\n * 200 OK. Return a list of Run-planners\n * 500 ERROR. Something went wrong\n\nOPERATION:\n\n1. Retrive all the Run-planners.\n2. Filter by operationAreaId if set, routeId if set. Else return all.\n3. Return the list of Run-planners.\n\nNOTES: \n\nNA"
       security:
         - JWT: []
       parameters:

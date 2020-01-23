@@ -8,7 +8,7 @@ description: |-
 properties:
   id:
     type: integer
-    description: '(1 | 0) Es perfil por default. Siempre = 1'
+    description: ''
   billProfile:
     $ref: ./bill-profile-external.v1.yaml
   isAutoBillEnabled:

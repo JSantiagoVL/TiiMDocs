@@ -1,0 +1,36 @@
+title: PromoCode
+type: object
+x-tags:
+  - Promocode
+properties:
+  id:
+    type: integer
+  promoCode:
+    type: string
+  discountPercentage:
+    type: integer
+    minimum: 0
+    maximum: 100
+    description: Number between 0 and 100
+  qty:
+    type: integer
+    default: 0
+    description: Qty of promocodes to be available (-1 = infinite)
+    minimum: -1
+  exipirationDate:
+    type:
+      - string
+      - 'null'
+    description: |-
+      If null, then never expires
+      YYYY-MM-DD HH:MM:SS
+  status:
+    type: string
+    default: ACTIVE
+    enum:
+      - ACTIVE
+      - DEACTIVATED
+    description: ''
+required:
+  - promoCode
+  - discountPercentage
