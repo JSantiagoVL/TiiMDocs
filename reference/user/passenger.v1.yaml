@@ -435,6 +435,10 @@ paths:
                   description: The amount of reserved seats 1 or 2
                 startStopId:
                   type: integer
+                promocode:
+                  type:
+                    - string
+                    - 'null'
       description: "Create a new reservation for the client.\n\nInternall function:\n\n1. Search for the user reserved seats inside the Run.\n1. Validate Run status is OPEN.\n2. Verify the amount of seats reserved equals seats in the request.\n3. Set reservation status as IN_PAYMENT\n4. Generate paymentOrder ans assign to the current reservation.\n5. The folio is made of runID+endStopID+TIMESTAMP_UNIX\n1. Set seats to be as the specified by the vehicle seatsNumeration.\n6. Save reservation.\n7. Return the reservation\n\n* The userID is provided by the JWT token. "
     parameters: []
     get:
@@ -865,7 +869,7 @@ paths:
                 properties:
                   isValid:
                     type: boolean
-                  disccount:
+                  discount:
                     type: integer
       operationId: get-payments-validate-promo-code
       description: "Validates if promocode is valid and ready to use.\n\nOperation: \n\n* Find the promocode inside the promocode table.\n* If active return true."
