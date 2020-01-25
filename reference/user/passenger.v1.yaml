@@ -849,7 +849,7 @@ paths:
         * Validate that the card belongs to the user.
         * Find the previously favorite card an set to false. (There should always exists a favorite card, otherwise throw an error)
         * Set the current card as favorite.
-  '/payments/validate-promo-code/{code}':
+  '/payments/validate-promo-code/{promocode}':
     get:
       summary: Validates if promocode is valid and ready to use
       tags:
@@ -865,8 +865,8 @@ paths:
                 properties:
                   isValid:
                     type: boolean
-                required:
-                  - isValid
+                  disccount:
+                    type: integer
       operationId: get-payments-validate-promo-code
       description: "Validates if promocode is valid and ready to use.\n\nOperation: \n\n* Find the promocode inside the promocode table.\n* If active return true."
       security:
@@ -874,7 +874,7 @@ paths:
     parameters:
       - schema:
           type: string
-        name: code
+        name: promocode
         in: path
         required: true
   '/journey/origins/{stopId}':
