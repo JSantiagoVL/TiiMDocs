@@ -9,7 +9,7 @@ servers:
   - url: 'https://api.gotiim.com/api/v1/dashboard'
     description: Production
   - description: Testing
-    url: 'https://testingapi.gotiim.com/api/v1/dashboard'
+    url: 'https://testapi.gotiim.com/api/v1/dashboard'
 paths:
   /operation-areas:
     post:
