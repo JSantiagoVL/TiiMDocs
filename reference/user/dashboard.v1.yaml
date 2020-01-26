@@ -1632,6 +1632,156 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/run-planner.v1.yaml
+  /promocodes/:
+    get:
+      summary: Get the list of promocodes
+      tags:
+        - Promocode
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  promocode:
+                    $ref: ../common/models/promocode.v1.yaml
+                  isValid:
+                    type: boolean
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-promocodes
+      description: "Get the list of promocodes.\n\nResponses:\n * 200 OK. Return the list of promocodes.\n * 500 ERROR. Something went wrong.\n\nOperation:\n\n  1. Get the list of promocodes, if operation Area is set, filter by OperationArea.\n  2. Return the requested data.\n\nNotes: \n\n* NA"
+      security:
+        - JWT: []
+      requestBody: {}
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: operationAreaId
+    post:
+      summary: Create a new promocode
+      tags:
+        - Promocode
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/promocode.v1.yaml
+        '406':
+          description: Not Acceptable
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: post-promocodes
+      parameters:
+        - schema:
+            type: string
+          in: header
+      description: |-
+        Create a new promocode.
+
+        RESPONSES:
+         * 201 CREATED. Return the created promocode.
+         * 500 ERROR. Something went wrong
+
+        OPERATION:
+
+        1. Verify that the operationAreaId exists.
+        2. Delete the id field if set.
+        3. Verify tha the promocode dosn't exist.
+        4. Save and return the promocode.
+
+
+        NOTES:
+
+         NA
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/promocode.v1.yaml
+  '/promocodes/{promocodeId}':
+    parameters:
+      - schema:
+          type: string
+        name: promocodeId
+        in: path
+        required: true
+    get:
+      summary: Geta a promo code
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/promocode.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: get-promocodes-promocodeId
+      description: "Geta a promo code.\n\nResponses:\n * 200 OK. Return the promocode.\n * 404. Not found\n * 500 ERROR. Something went wrong.\n\nOperation:\n\n  1. Get the promocode.\n  2. Return the requested data.\n\nNotes: \n\n* NA"
+      security:
+        - JWT: []
+      parameters: []
+    patch:
+      summary: Update a promocode
+      tags: []
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/promocode.v1.yaml
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/error.v1.yaml
+      operationId: patch-promocodes-promocodeId
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../common/models/promocode.v1.yaml
 components:
   schemas: {}
   securitySchemes:

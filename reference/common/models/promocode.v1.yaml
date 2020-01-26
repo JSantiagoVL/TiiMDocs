@@ -33,6 +33,8 @@ properties:
     description: ''
   appliedPromosCount:
     type: integer
+  operationAreaId:
+    type: integer
 required:
   - promoCode
   - discount
