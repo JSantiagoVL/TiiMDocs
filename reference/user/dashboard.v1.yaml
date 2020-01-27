@@ -1304,7 +1304,7 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/run.v1.yaml
-  '/run/{runID}':
+  '/runs/{runID}':
     parameters:
       - type: string
         name: runID
@@ -1383,6 +1383,8 @@ paths:
                     type: array
                     items:
                       $ref: ../common/models/reservation.v1.yaml
+                  evaluations:
+                    $ref: ../common/models/rate.v1.yaml
         '404':
           description: Not Found
           content:
