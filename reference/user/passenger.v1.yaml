@@ -393,6 +393,10 @@ paths:
       tags:
         - Reservation
         - Seats
+      parameters:
+        - schema:
+            type: string
+          in: header
   /reservations:
     post:
       summary: Create a new reservation
@@ -871,6 +875,8 @@ paths:
                     type: boolean
                   discount:
                     type: integer
+        '401':
+          description: Unauthorized
       operationId: get-payments-validate-promo-code
       description: "Validates if promocode is valid and ready to use.\n\nOperation: \n\n* Find the promocode inside the promocode table.\n* If active return true."
       security:
