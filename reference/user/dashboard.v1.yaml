@@ -1825,6 +1825,28 @@ paths:
       operationId: get-bills
       security:
         - JWT: []
+    post:
+      summary: ''
+      operationId: post-bills
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/bill.v1.yaml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                profile:
+                  $ref: ../common/models/bill-profile-external.v1.yaml
+                bill:
+                  $ref: ../common/models/bill.v1.yaml
+      security:
+        - JWT: []
   '/bills/{billID}':
     get:
       summary: Get a specific bill
@@ -1846,12 +1868,6 @@ paths:
         name: billID
         in: path
         required: true
-  /bill/:
-    post:
-      summary: Make a new bill
-      tags: []
-      responses: {}
-      operationId: post-bill
 components:
   schemas: {}
   securitySchemes:

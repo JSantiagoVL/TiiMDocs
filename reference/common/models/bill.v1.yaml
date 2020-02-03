@@ -27,3 +27,12 @@ properties:
     type: string
   sUuid:
     type: string
+required:
+  - dIva
+  - dPrecioUnitario
+  - dSubtotal
+  - dTotal
+  - iCantidad
+  - iIdPerfilFacturacion
+  - iTipoFormaDePago
+  - sCondicionesDePago
