@@ -1784,6 +1784,74 @@ paths:
           application/json:
             schema:
               $ref: ../common/models/promocode.v1.yaml
+  '/bills-cancel/{billID}':
+    patch:
+      summary: Cancel a bill
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  oFactura:
+                    $ref: ../common/models/bill.v1.yaml
+                  sDetalle:
+                    type: string
+      operationId: patch-bills-canel-billId
+      description: ''
+    parameters:
+      - schema:
+          type: string
+        name: billID
+        in: path
+        required: true
+  /bills/:
+    get:
+      summary: Get all bills
+      tags:
+        - Bill
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../common/models/bill.v1.yaml
+      operationId: get-bills
+      security:
+        - JWT: []
+  '/bills/{billID}':
+    get:
+      summary: Get a specific bill
+      tags:
+        - Bill
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: ../common/models/bill.v1.yaml
+      operationId: get-bills-billId
+      security:
+        - JWT: []
+    parameters:
+      - schema:
+          type: string
+        name: billID
+        in: path
+        required: true
+  /bill/:
+    post:
+      summary: Make a new bill
+      tags: []
+      responses: {}
+      operationId: post-bill
 components:
   schemas: {}
   securitySchemes:

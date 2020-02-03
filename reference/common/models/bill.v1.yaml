@@ -1,0 +1,29 @@
+title: Bill
+type: object
+x-tags:
+  - Bill
+properties:
+  iIdFactura:
+    type: integer
+  dIva:
+    type: number
+  dPrecioUnitario:
+    type: number
+  dSubtotal:
+    type: number
+  dTotal:
+    type: number
+  iCantidad:
+    type: integer
+  iIdEstatusFacturacion:
+    type: integer
+  iIdPerfilFacturacion:
+    type: integer
+  iTipoFormaDePago:
+    type: integer
+  sCondicionesDePago:
+    type: string
+  sCuenta:
+    type: string
+  sUuid:
+    type: string
