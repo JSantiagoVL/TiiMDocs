@@ -43,3 +43,7 @@ properties:
     type: string
   lastPaymentIntentId:
     type: integer
+  billId:
+    type:
+      - integer
+      - 'null'

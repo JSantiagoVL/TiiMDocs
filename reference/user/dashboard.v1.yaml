@@ -1819,12 +1819,38 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: ../common/models/bill.v1.yaml
+                type: object
+                properties:
+                  clientName:
+                    type: string
+                  reservedAt:
+                    type: string
+                  departureDate:
+                    type: string
+                  totalAmount:
+                    type: number
+                  billId:
+                    type:
+                      - 'null'
+                      - integer
+                  reservationId:
+                    type: integer
+                  paymentOrderId:
+                    type: integer
       operationId: get-bills
       security:
         - JWT: []
+      parameters:
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: limit
+        - schema:
+            type: integer
+            minimum: 1
+          in: query
+          name: page
     post:
       summary: ''
       operationId: post-bills
@@ -1862,6 +1888,15 @@ paths:
       operationId: get-bills-billId
       security:
         - JWT: []
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - json
+              - pdf
+              - xml
+          in: query
+          name: format
     parameters:
       - schema:
           type: string
