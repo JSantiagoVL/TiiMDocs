@@ -1869,8 +1869,8 @@ paths:
               properties:
                 profile:
                   $ref: ../common/models/bill-profile-external.v1.yaml
-                bill:
-                  $ref: ../common/models/bill.v1.yaml
+                paymentOrderId:
+                  type: integer
       security:
         - JWT: []
   '/bills/{billID}':

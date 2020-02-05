@@ -10,7 +10,7 @@ properties:
     type: integer
   sCorreoElectronico:
     type: string
-  SRazonSocial:
+  sRazonSocial:
     type: string
   sRFC:
     type: string
@@ -19,6 +19,6 @@ properties:
 required:
   - iTipoRegimen
   - sCorreoElectronico
-  - SRazonSocial
+  - sRazonSocial
   - sRFC
   - sUsoCfdi

@@ -13,8 +13,6 @@ properties:
     type: number
   dTotal:
     type: number
-  iCantidad:
-    type: integer
   iIdEstatusFacturacion:
     type: integer
   iIdPerfilFacturacion:
@@ -27,12 +25,13 @@ properties:
     type: string
   sUuid:
     type: string
+  iCantidad:
+    type: integer
 required:
   - dIva
   - dPrecioUnitario
   - dSubtotal
   - dTotal
-  - iCantidad
   - iIdPerfilFacturacion
   - iTipoFormaDePago
   - sCondicionesDePago
