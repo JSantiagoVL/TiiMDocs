@@ -1837,6 +1837,8 @@ paths:
                     type: integer
                   paymentOrderId:
                     type: integer
+                  billStatus:
+                    type: string
       operationId: get-bills
       security:
         - JWT: []
