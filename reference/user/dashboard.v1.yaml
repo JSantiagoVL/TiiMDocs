@@ -1905,6 +1905,68 @@ paths:
         name: billID
         in: path
         required: true
+  /files:
+    post:
+      summary: ''
+      operationId: post-files
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                resultado:
+                  value:
+                    url: 'https://images-gotiim.s3-us-west-2.amazonaws.com/images/27fcf95f484cd5359f12f0a0040ded62.png'
+                    message: Ok
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                respuesta:
+                  value:
+                    message: no file
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                respuesta:
+                  value:
+                    message: Error al subir el archivo
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                archivo:
+                  type: object
+              required:
+                - archivo
+            examples:
+              example:
+                value:
+                  archivo: file
+        description: ''
 components:
   schemas: {}
   securitySchemes:
