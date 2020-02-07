@@ -1967,6 +1967,106 @@ paths:
                 value:
                   archivo: file
         description: ''
+  /kpis:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      operationId: get-kpis
+      parameters:
+        - schema:
+            type: string
+            maxLength: 0
+            minLength: 0
+            pattern: yyyy-mm-dd
+          in: query
+          name: startDate
+          description: ''
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: endDate
+          required: true
+        - schema:
+            type: number
+          in: query
+          name: operationAreaID
+          required: true
+        - schema:
+            type: number
+          in: query
+          name: routeID
+          required: true
+      requestBody: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalTickets:
+                    type: number
+                  totalPassengers:
+                    type: number
+                  totalCancellations:
+                    type: number
+                  totalAbsences:
+                    type: number
+                  totalPassengerIncidents:
+                    type: number
+                  totalPendingAlerts:
+                    type: number
+                  totalRevenues:
+                    type: number
+                  totalRefunds:
+                    type: number
+                  mostReservedRoutes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        date:
+                          type: string
+                        count:
+                          type: number
+                  lessReservedRoutes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        date:
+                          type: string
+                        count:
+                          type: number
+              examples: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                incorrect params:
+                  value:
+                    message: incorrect params
+        '500':
+          description: Internal Server Error
+        '':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    parameters: []
 components:
   schemas: {}
   securitySchemes:
