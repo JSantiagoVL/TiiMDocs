@@ -2389,6 +2389,63 @@ paths:
                 type: object
                 properties: {}
     parameters: []
+  /kpis/download:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      operationId: get-kpis-download
+      parameters:
+        - schema:
+            type: string
+            maxLength: 0
+            minLength: 0
+            pattern: yyyy-mm-dd
+          in: query
+          name: startDate
+          description: ''
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: endDate
+          required: true
+        - schema:
+            type: number
+          in: query
+          name: operationAreaID
+          required: true
+        - schema:
+            type: number
+          in: query
+          name: routeID
+          required: true
+      requestBody: {}
+      description: ''
+      responses:
+        '200':
+          description: File xlsx
+          headers: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                incorrect params:
+                  value:
+                    message: incorrect params
+        '500':
+          description: Internal Server Error
+        '':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
 components:
   schemas: {}
   securitySchemes:
