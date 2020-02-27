@@ -24,3 +24,13 @@ properties:
       - DEACTIVATED
   operationAreaId:
     type: integer
+  ascendigStops:
+    type: array
+    items:
+      type: object
+      properties:
+        stopId:
+          type: integer
+        time:
+          type: string
+          example: '15:30:00'

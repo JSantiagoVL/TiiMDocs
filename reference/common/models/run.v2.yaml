@@ -1,0 +1,38 @@
+title: Run
+type: object
+description: 'A scheduled run that then could be transformed into a journey. Please notice the different available status. '
+properties:
+  id:
+    type: integer
+  operationAreaId:
+    type: integer
+  stop:
+    $ref: ./stop.v1.yaml
+  status:
+    type: string
+    enum:
+      - CANCELLED
+      - OPEN
+      - CLOSED
+      - COMPLETED
+      - IN_JOURNEY
+  departureDate:
+    type: string
+    format: date-time
+    description: 'YYYY-MM-DD HH:MM:SS'
+  driverId:
+    type: integer
+  busId:
+    type: integer
+  routeId:
+    type: integer
+  asendDates:
+    type: array
+    items:
+      $ref: ./run-ascend-dates.v1.yaml
+required:
+  - id
+  - departureDate
+  - driverId
+  - busId
+  - routeId
