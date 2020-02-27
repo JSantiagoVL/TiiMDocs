@@ -2044,22 +2044,15 @@ paths:
               schema:
                 type: object
                 properties:
-                  totalTickets:
-                    type: number
-                  totalPassengers:
-                    type: number
-                  totalCancellations:
-                    type: number
-                  totalAbsences:
-                    type: number
-                  totalPassengerIncidents:
-                    type: number
-                  totalPendingAlerts:
-                    type: number
-                  totalRevenues:
-                    type: number
-                  totalRefunds:
-                    type: number
+                  total:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        count:
+                          type: number
                   mostReservedRoutes:
                     type: array
                     items:
@@ -2067,8 +2060,8 @@ paths:
                       properties:
                         name:
                           type: string
-                        date:
-                          type: string
+                        id:
+                          type: number
                         count:
                           type: number
                   lessReservedRoutes:
@@ -2082,7 +2075,336 @@ paths:
                           type: string
                         count:
                           type: number
-              examples: {}
+                  calorMap:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        dia:
+                          type: string
+                        horas:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              hora:
+                                type: string
+                              count:
+                                type: string
+              examples:
+                Respuesta:
+                  value:
+                    total:
+                      - name: Tickets
+                        count: 16
+                      - name: Confirmed
+                        count: 11
+                      - name: Passengers
+                        count: 5
+                        breakdown:
+                          - name: Hombre
+                            count: 0
+                          - name: Mujer
+                            count: 0
+                          - name: NoDefinido
+                            count: 5
+                      - name: UserCancellations
+                        count: 0
+                      - name: Absences
+                        count: 0
+                      - name: Alerts
+                        count: 0
+                      - name: Refunds
+                        count: 0
+                      - name: Revenues
+                        count: 110
+                    mostReservedRoutes:
+                      - id: 1
+                        name: Buenavista - Torre BBVA
+                        count: 25
+                      - id: 21
+                        name: "Del sur - Pa'l norte"
+                        count: 5
+                      - id: 20
+                        name: Trabajo - Garnachalandia
+                        count: 1
+                    lessReservedRoutes:
+                      - id: 15
+                        name: Buenavista - Reforma
+                        count: 1
+                      - id: 17
+                        name: Santa Fe - Condesa
+                        count: 1
+                      - id: 20
+                        name: Trabajo - Garnachalandia
+                        count: 1
+                    calorMap:
+                      - dia: '1'
+                        horas:
+                          - hora: '7'
+                            count: 0
+                          - hora: '8'
+                            count: 0
+                          - hora: '9'
+                            count: 0
+                          - hora: '10'
+                            count: 0
+                          - hora: '11'
+                            count: 0
+                          - hora: '12'
+                            count: 0
+                          - hora: '13'
+                            count: 0
+                          - hora: '14'
+                            count: 0
+                          - hora: '15'
+                            count: 0
+                          - hora: '16'
+                            count: 0
+                          - hora: '17'
+                            count: 0
+                          - hora: '18'
+                            count: 0
+                          - hora: '19'
+                            count: 0
+                          - hora: '20'
+                            count: 0
+                          - hora: '21'
+                            count: 0
+                          - hora: '22'
+                            count: 0
+                          - hora: '23'
+                            count: 1
+                          - hora: '24'
+                            count: 0
+                      - dia: '2'
+                        horas:
+                          - hora: '7'
+                            count: 0
+                          - hora: '8'
+                            count: 0
+                          - hora: '9'
+                            count: 0
+                          - hora: '10'
+                            count: 0
+                          - hora: '11'
+                            count: 0
+                          - hora: '12'
+                            count: 0
+                          - hora: '13'
+                            count: 0
+                          - hora: '14'
+                            count: 0
+                          - hora: '15'
+                            count: 0
+                          - hora: '16'
+                            count: 1
+                          - hora: '17'
+                            count: 0
+                          - hora: '18'
+                            count: 0
+                          - hora: '19'
+                            count: 0
+                          - hora: '20'
+                            count: 0
+                          - hora: '21'
+                            count: 0
+                          - hora: '22'
+                            count: 0
+                          - hora: '23'
+                            count: 0
+                          - hora: '24'
+                            count: 0
+                      - dia: '3'
+                        horas:
+                          - hora: '7'
+                            count: 0
+                          - hora: '8'
+                            count: 0
+                          - hora: '9'
+                            count: 11
+                          - hora: '10'
+                            count: 0
+                          - hora: '11'
+                            count: 0
+                          - hora: '12'
+                            count: 0
+                          - hora: '13'
+                            count: 0
+                          - hora: '14'
+                            count: 0
+                          - hora: '15'
+                            count: 0
+                          - hora: '16'
+                            count: 0
+                          - hora: '17'
+                            count: 0
+                          - hora: '18'
+                            count: 0
+                          - hora: '19'
+                            count: 0
+                          - hora: '20'
+                            count: 0
+                          - hora: '21'
+                            count: 0
+                          - hora: '22'
+                            count: 0
+                          - hora: '23'
+                            count: 0
+                          - hora: '24'
+                            count: 0
+                      - dia: '4'
+                        horas:
+                          - hora: '7'
+                            count: 0
+                          - hora: '8'
+                            count: 0
+                          - hora: '9'
+                            count: 0
+                          - hora: '10'
+                            count: 0
+                          - hora: '11'
+                            count: 0
+                          - hora: '12'
+                            count: 0
+                          - hora: '13'
+                            count: 0
+                          - hora: '14'
+                            count: 0
+                          - hora: '15'
+                            count: 0
+                          - hora: '16'
+                            count: 0
+                          - hora: '17'
+                            count: 0
+                          - hora: '18'
+                            count: 0
+                          - hora: '19'
+                            count: 0
+                          - hora: '20'
+                            count: 0
+                          - hora: '21'
+                            count: 0
+                          - hora: '22'
+                            count: 0
+                          - hora: '23'
+                            count: 0
+                          - hora: '24'
+                            count: 0
+                      - dia: '5'
+                        horas:
+                          - hora: '7'
+                            count: 0
+                          - hora: '8'
+                            count: 0
+                          - hora: '9'
+                            count: 0
+                          - hora: '10'
+                            count: 0
+                          - hora: '11'
+                            count: 0
+                          - hora: '12'
+                            count: 0
+                          - hora: '13'
+                            count: 0
+                          - hora: '14'
+                            count: 0
+                          - hora: '15'
+                            count: 0
+                          - hora: '16'
+                            count: 0
+                          - hora: '17'
+                            count: 0
+                          - hora: '18'
+                            count: 0
+                          - hora: '19'
+                            count: 1
+                          - hora: '20'
+                            count: 0
+                          - hora: '21'
+                            count: 0
+                          - hora: '22'
+                            count: 0
+                          - hora: '23'
+                            count: 0
+                          - hora: '24'
+                            count: 0
+                      - dia: '6'
+                        horas:
+                          - hora: '7'
+                            count: 0
+                          - hora: '8'
+                            count: 0
+                          - hora: '9'
+                            count: 0
+                          - hora: '10'
+                            count: 0
+                          - hora: '11'
+                            count: 0
+                          - hora: '12'
+                            count: 2
+                          - hora: '13'
+                            count: 0
+                          - hora: '14'
+                            count: 0
+                          - hora: '15'
+                            count: 0
+                          - hora: '16'
+                            count: 0
+                          - hora: '17'
+                            count: 0
+                          - hora: '18'
+                            count: 0
+                          - hora: '19'
+                            count: 0
+                          - hora: '20'
+                            count: 0
+                          - hora: '21'
+                            count: 0
+                          - hora: '22'
+                            count: 0
+                          - hora: '23'
+                            count: 0
+                          - hora: '24'
+                            count: 0
+                      - dia: '7'
+                        horas:
+                          - hora: '7'
+                            count: 0
+                          - hora: '8'
+                            count: 0
+                          - hora: '9'
+                            count: 0
+                          - hora: '10'
+                            count: 0
+                          - hora: '11'
+                            count: 0
+                          - hora: '12'
+                            count: 0
+                          - hora: '13'
+                            count: 0
+                          - hora: '14'
+                            count: 0
+                          - hora: '15'
+                            count: 0
+                          - hora: '16'
+                            count: 0
+                          - hora: '17'
+                            count: 0
+                          - hora: '18'
+                            count: 0
+                          - hora: '19'
+                            count: 0
+                          - hora: '20'
+                            count: 0
+                          - hora: '21'
+                            count: 0
+                          - hora: '22'
+                            count: 0
+                          - hora: '23'
+                            count: 0
+                          - hora: '24'
+                            count: 0
         '400':
           description: Bad Request
           content:
@@ -2105,6 +2427,63 @@ paths:
                 type: object
                 properties: {}
     parameters: []
+  /kpis/download:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      operationId: get-kpis-download
+      parameters:
+        - schema:
+            type: string
+            maxLength: 0
+            minLength: 0
+            pattern: yyyy-mm-dd
+          in: query
+          name: startDate
+          description: ''
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: endDate
+          required: true
+        - schema:
+            type: number
+          in: query
+          name: operationAreaID
+          required: true
+        - schema:
+            type: number
+          in: query
+          name: routeID
+          required: true
+      requestBody: {}
+      description: ''
+      responses:
+        '200':
+          description: File xlsx
+          headers: {}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              examples:
+                incorrect params:
+                  value:
+                    message: incorrect params
+        '500':
+          description: Internal Server Error
+        '':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
 components:
   schemas: {}
   securitySchemes:
